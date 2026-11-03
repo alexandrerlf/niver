@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Convite de {{child_name}}</title>
+<link href="https://fonts.googleapis.com/css2?family=Jersey+20&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{--invite-accent:#1f7a14;--invite-on-accent:#fff}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:#070b16;color:#f2f6ff;font-family:'Jersey 20',ui-monospace,monospace;overflow:hidden}
+.stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.bg{position:absolute;inset:-6%;width:112%;height:112%;object-fit:cover;filter:blur(26px) brightness(.55) saturate(1.1);pointer-events:none}
+.card{position:relative;container-type:inline-size;width:min(100vw,calc(100dvh * 941 / 1672));aspect-ratio:941/1672}
+.art{display:block;width:100%;height:100%;user-select:none;-webkit-user-drag:none}
+.slot{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0;text-align:center;overflow:hidden}
+.name-box{position:absolute;left:13%;top:14.6%;width:74%;height:12.8%;margin:0;transform:scaleY(1.25);transform-origin:top;display:grid;grid-auto-rows:minmax(0,1fr);font-size:inherit;font-weight:400}
+.name-line{display:flex;min-width:0;min-height:0;font-size:12.5cqw;line-height:1;text-align:center}
+.name-line:has(span:empty){display:none}
+.name-line>span{display:inline-block;margin:auto}
+.name-line:first-child:not(:has(+ .name-line>span:empty)){transform:translateY(11%)}
+.name-line:last-child{transform:translateY(-11%)}
+.age{left:33.4%;top:34.1%;width:33.2%;height:4.6%;flex-direction:row;gap:.4em;font-size:6.6cqw;line-height:1;white-space:nowrap;color:#ffd37a;text-shadow:.3cqw 0 0 #2a1608,-.3cqw 0 0 #2a1608,0 .3cqw 0 #2a1608,0 -.3cqw 0 #2a1608}
+.age img{filter:sepia(1) saturate(3.4) hue-rotate(-6deg) brightness(1.08)}
+.age:empty::before{content:"Parabéns!"}
+.message{left:24%;top:44.7%;width:52.4%;height:6.4%;font-size:3.9cqw;line-height:.98;color:#f2f6ff}
+.message:empty::before{content:"Prepare-se para uma aventura cheia de diversão, amigos e muitas explosões... de alegria!"}
+.date{left:19.8%;top:65.2%;width:18.6%;height:4.2%}
+.date span,.date small{display:block;width:100%;overflow:hidden;white-space:nowrap}
+.date span{font-size:4.6cqw;line-height:.95}
+.date small{font-size:3.4cqw;line-height:.95}
+.time{left:42.5%;top:65.4%;width:15.4%;height:2.8%;font-size:5.2cqw;line-height:1}
+.place{left:62%;top:65.4%;width:19.2%;height:3.5%;font-size:3.1cqw;line-height:.95}
+.hot{position:absolute;display:block;padding:0;border:0;background:transparent;cursor:pointer;border-radius:10px;-webkit-tap-highlight-color:transparent;transition:box-shadow .15s,background .15s,transform .1s}
+.hot:hover,.hot:focus-visible{background:rgba(120,255,100,.12);box-shadow:0 0 0 3px #7dff63,0 0 22px 4px rgba(125,255,99,.55);outline:none}
+.hot:active{transform:scale(.98)}
+.hot span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.hot-maps{left:61.4%;top:57.2%;width:20.4%;height:12.6%}
+.hot-rsvp{left:23.4%;top:73%;width:54.2%;height:9.6%}
+.hot-gifts{left:76.4%;top:84.4%;width:22%;height:11.4%}
+.nv-dialog.nv-dialog{width:min(92vw,430px);max-width:none;max-height:calc(100dvh - 24px);overflow:auto;color:#f2f6ff;font:clamp(16px,5vw,23px)/1.1 "VT323",ui-monospace,monospace}
+.nv-dialog.nv-dialog::backdrop{background:rgba(2,4,10,.78)}
+.nv-dialog .nv-box{background:#111a2b;border:4px solid #3a4560;border-radius:0;box-shadow:inset 0 0 0 4px #0a1020,0 12px 40px rgba(0,0,0,.6);padding:clamp(14px,4.6vw,22px) clamp(12px,4.2vw,20px) clamp(12px,4.2vw,20px)}
+.nv-dialog .nv-box h2{margin:0 0 4px;font-weight:400;font-size:clamp(22px,7.4vw,34px);line-height:1;color:#4cd137}
+.nv-dialog .nv-sub{margin:0 0 clamp(8px,3vw,14px);opacity:.85;line-height:1.1}
+.nv-dialog .nv-box label{margin:clamp(8px,2.6vw,12px) 0 4px;font-weight:400}
+.nv-dialog .nv-box input{min-height:0;padding:clamp(4px,1.6vw,8px) 10px;border:3px solid #3a4560;border-radius:0;background:#060a14;color:#f2f6ff;font-size:clamp(18px,5.6vw,26px)}
+.nv-dialog .nv-box input:focus{outline:none;border-color:#4cd137}
+.nv-dialog .nv-row{gap:clamp(6px,2vw,10px);margin-top:clamp(12px,4vw,20px)}
+.nv-dialog .nv-btn{flex:.6;min-width:0;min-height:0;padding:clamp(5px,2vw,10px) 6px;border:3px solid #3a4560;border-radius:0;background:#1b2438;color:#fff;font-size:clamp(18px,5.6vw,26px);font-weight:400;white-space:nowrap}
+.nv-dialog .nv-btn:hover,.nv-dialog .nv-btn:focus-visible{background:#26314b;outline:none}
+.nv-dialog .nv-btn.nv-primary{flex:1;border-color:#7dff63;background:#1f7a14}
+.nv-dialog .nv-btn.nv-primary:hover,.nv-dialog .nv-btn.nv-primary:focus-visible{background:#28a01a}
+.nv-dialog .nv-status{min-height:1.1em;margin:8px 0 0;font-size:clamp(15px,4.6vw,21px)}
+.nv-dialog .nv-error{color:#ff7b6b}
+.nv-dialog .nv-ok{color:#4cd137}
+.nv-dialog .nv-hint{margin:clamp(8px,2.6vw,12px) 0 0;font-size:clamp(14px,4.2vw,19px);line-height:1.05;opacity:.65}
+.nv-dialog .nv-box ul{margin:0;padding:0;list-style:none}
+.nv-dialog .nv-box li{margin:0 0 clamp(6px,2vw,8px);padding:clamp(5px,1.8vw,8px) 10px;border-left:4px solid #4cd137;background:#060a14;line-height:1.05}
+.nv-dialog .nv-box li b{color:#4cd137;font-weight:400}
+@media (prefers-reduced-motion:reduce){.hot{transition:none}}
+</style>
+</head>
+<body>
+<div class="stage">
+<img class="bg" src="{{art_url}}" alt="">
+<main class="card">
+  <img class="art" src="{{art_url}}" alt="Convite de aniversário de {{child_name}} no tema Minecraft">
+  <h1 class="name-box" aria-label="{{child_name}}">
+    <span class="name-line" data-fit><span data-letters="/alfabetos/minecraft/pedra">{{child_name_first}}</span></span>
+    <span class="name-line" data-fit><span data-letters="/alfabetos/minecraft/verde">{{child_name_rest}}</span></span>
+  </h1>
+  <p class="slot age" data-fit data-letters="/alfabetos/minecraft/pedra">{{age_label}}</p>
+  <p class="slot message" data-fit>{{message}}</p>
+  <p class="slot date"><span data-fit>{{event_date_short}}</span><small data-fit>({{event_weekday}})</small></p>
+  <p class="slot time" data-fit>{{event_time}}</p>
+  <p class="slot place" data-fit>{{location_name}}</p>
+  <a class="hot hot-maps" data-action="maps"><span>Abrir localização no mapa</span></a>
+  <button class="hot hot-rsvp" type="button" data-action="rsvp"><span>Confirmar presença</span></button>
+  <button class="hot hot-gifts" type="button" data-action="gifts"><span>Sugestões de presentes</span></button>
+</main>
+</div>
+</body>
+</html>
