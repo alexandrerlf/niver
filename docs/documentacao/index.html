@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Niver: fluxo e funcionalidades</title>
+<style>
+:root{
+  --bg:#fff6e9;--card:#fffdf9;--ink:#2a1f1a;--muted:#6f5f54;--line:#e7d8c6;
+  --accent:#c7401d;--on-accent:#fff;--soft:#ffe9cf;--ok:#1f7a4d;--ok-soft:#dff3e8;--wait:#8a5a00;--wait-soft:#fdeec5;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#1b1512;--card:#261e1a;--ink:#f6ece3;--muted:#bfae9f;--line:#43362e;
+    --accent:#ff7a52;--on-accent:#2a1208;--soft:#3a2a20;--ok:#7fd8a8;--ok-soft:#1d3a2b;--wait:#f3c969;--wait-soft:#3b2f12;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1b1512;--card:#261e1a;--ink:#f6ece3;--muted:#bfae9f;--line:#43362e;
+  --accent:#ff7a52;--on-accent:#2a1208;--soft:#3a2a20;--ok:#7fd8a8;--ok-soft:#1d3a2b;--wait:#f3c969;--wait-soft:#3b2f12;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px 72px}
+header{padding:36px 0 12px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-size:15px;font-weight:800;letter-spacing:.04em;color:var(--accent);text-transform:uppercase}
+h1{margin:14px 0 8px;font-size:clamp(30px,6vw,46px);line-height:1.08}
+h2{margin:44px 0 6px;font-size:27px;line-height:1.2}
+h3{margin:0 0 6px;font-size:20px;line-height:1.25}
+p{margin:0 0 12px}
+.lead{max-width:62ch;color:var(--muted);font-size:19px}
+.sub{max-width:62ch;margin-bottom:16px;color:var(--muted)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ghost{min-height:44px;padding:8px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);cursor:pointer;font-size:15px;font-weight:600}
+nav.jump{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+nav.jump a{display:inline-flex;align-items:center;min-height:44px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:inherit;font-size:15px;font-weight:600;text-decoration:none}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.tab{min-height:44px;padding:8px 16px;border:1px solid var(--line);border-radius:999px;background:var(--card);cursor:pointer;font-weight:700}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.flow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:16px}
+.steps{display:grid;gap:8px;margin:0;padding:0;list-style:none;align-content:start}
+.step{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card);cursor:pointer;text-align:left;font-weight:650}
+.step b{display:flex;flex:none;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--soft);font-size:15px}
+.step[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.step[aria-pressed="true"] b{background:var(--accent);color:var(--on-accent)}
+.detail,.panel{padding:18px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.detail{align-self:start;position:sticky;top:12px}
+.path{display:inline-block;margin:4px 0 10px;padding:3px 8px;border-radius:6px;background:var(--soft);font:14px ui-monospace,Consolas,monospace;overflow-wrap:anywhere}
+.detail ul{margin:8px 0 0;padding-left:20px}
+.detail li{margin:4px 0}
+.anatomy{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:18px;align-items:start}
+.invite{position:relative;width:100%;max-width:300px;margin:0 auto;aspect-ratio:941/1672;overflow:hidden;border-radius:14px;border:1px solid var(--line);background:var(--soft)}
+.invite img{display:block;width:100%;height:100%}
+.zone{position:absolute;padding:0;border:2px dashed rgba(255,255,255,.75);border-radius:6px;background:rgba(0,0,0,.08);cursor:pointer}
+.zone:hover,.zone[aria-pressed="true"]{border-style:solid;border-color:#ffc94a;background:rgba(255,201,74,.28)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px;padding:0;list-style:none}
+.chip{padding:2px 8px;border-radius:6px;background:var(--soft);font:14px ui-monospace,Consolas,monospace;overflow-wrap:anywhere}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.tools input{flex:1 1 220px;min-height:44px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:inherit;font:inherit}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin:0;padding:0;list-style:none}
+.feature{display:flex;flex-direction:column;gap:6px;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.feature h3{font-size:17px;margin:0}
+.feature p{margin:0;color:var(--muted);font-size:15px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:6px}
+.tag{padding:2px 8px;border-radius:999px;background:var(--soft);font-size:13px;font-weight:700}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}
+.tag.wait{background:var(--wait-soft);color:var(--wait)}
+.empty{padding:16px;color:var(--muted)}
+.check{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+.check:first-child{border-top:0}
+.check input{flex:none;width:22px;height:22px;margin-top:3px;accent-color:var(--accent)}
+.check label{cursor:pointer}
+.progress{margin-bottom:10px;font-weight:700}
+footer{margin-top:48px;color:var(--muted);font-size:15px}
+footer a{color:inherit}
+@media (max-width:720px){
+  .flow,.anatomy{grid-template-columns:minmax(0,1fr)}
+  .detail{position:static}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="top">
+    <span class="brand">Niver</span>
+    <button class="ghost" id="theme" type="button">Trocar tema</button>
+  </div>
+  <h1>Como o Niver funciona</h1>
+  <p class="lead">O admin publica modelos, o cliente transforma um modelo em convite, e os convidados confirmam presença por um link.</p>
+  <nav class="jump" aria-label="Seções">
+    <a href="#fluxo">Fluxo</a>
+    <a href="#anatomia">Anatomia do convite</a>
+    <a href="#funcionalidades">Funcionalidades</a>
+    <a href="#colocar-no-ar">Colocar no ar</a>
+  </nav>
+</header>
+
+<main>
+<section id="fluxo">
+  <h2>Fluxo</h2>
+  <p class="sub">Escolha um perfil e toque em uma etapa para ver a tela, o que acontece e o que observar.</p>
+  <div class="tabs" role="tablist" aria-label="Perfil" id="tabs"></div>
+  <div class="flow">
+    <ol class="steps" id="steps"></ol>
+    <div class="detail" id="detail" aria-live="polite"></div>
+  </div>
+</section>
+
+<section id="anatomia">
+  <h2>Anatomia do convite</h2>
+  <p class="sub">A arte não leva dados de nenhum cliente. Toque em uma área para ver o que entra por cima dela.</p>
+  <div class="anatomy">
+    <div class="invite" id="invite">
+      <img src="../../templates/minecraft/arte.jpg" alt="Arte-base do modelo Minecraft, com os painéis de texto vazios">
+    </div>
+    <div class="panel" id="zone-detail" aria-live="polite"></div>
+  </div>
+</section>
+
+<section id="funcionalidades">
+  <h2>Funcionalidades</h2>
+  <p class="sub">"Testado" indica verificação automática ou no banco. "A validar" depende do primeiro uso com login real.</p>
+  <div class="tools">
+    <input id="search" type="search" placeholder="Buscar funcionalidade" aria-label="Buscar funcionalidade">
+    <div class="tabs" id="filters" style="margin:0" role="group" aria-label="Filtrar por perfil"></div>
+  </div>
+  <ul class="grid" id="features"></ul>
+  <p class="empty" id="no-results" hidden>Nada encontrado.</p>
+</section>
+
+<section id="colocar-no-ar">
+  <h2>Colocar no ar</h2>
+  <p class="sub">Marque cada passo conforme concluir. As marcações ficam salvas neste navegador.</p>
+  <div class="panel">
+    <p class="progress" id="progress"></p>
+    <div id="checklist"></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  Detalhes em <a href="requisito-catalogo-de-modelos.md">requisito-catalogo-de-modelos.md</a>.
+</footer>
+</div>
+
+<script>
+var FLOWS = {
+  admin: { label: "Admin", steps: [
+    { t: "Criar a arte no ChatGPT", p: "ChatGPT", d: "Crie a cena do tema por fora, uma vez. A imagem não deve ter nome, data nem local.", n: ["Deixe painéis vazios para os textos.", "Marcas e personagens famosos podem ser recusados."] },
+    { t: "Criar o modelo", p: "/admin/modelos", d: "Informe o nome. O modelo nasce como rascunho, com um HTML inicial que já funciona.", n: ["Só você vê rascunhos."] },
+    { t: "Enviar arte e HTML", p: "/admin/modelos/<id>", d: "Envie a imagem e cole o HTML do modelo.", n: ["JPG, PNG ou WebP, até 8 MB.", "Cerca de código colada junto é removida ao salvar."] },
+    { t: "Conferir a prévia", p: "/admin/modelos/<id>", d: "A prévia usa dados fictícios, com nome longo, para mostrar como os textos cabem.", n: ["Presenças da prévia não são gravadas.", "O app lista o que falta no HTML."] },
+    { t: "Definir quem usa", p: "/admin/modelos/<id>", d: "Escolha todos os clientes ou somente os e-mails indicados.", n: ["Um e-mail da lista passa a ser cliente autorizado."] },
+    { t: "Publicar", p: "/admin/modelos/<id>", d: "O modelo aparece no catálogo de quem tem acesso.", n: ["Editar depois não muda convites já criados.", "Arquivar tira do catálogo sem quebrar convites."] }
+  ]},
+  cliente: { label: "Cliente", steps: [
+    { t: "Entrar", p: "/login", d: "Login com Google ou e-mail e senha.", n: ["Sem autorização, o catálogo fica vazio e o app explica o motivo."] },
+    { t: "Escolher o modelo", p: "/novo", d: "O catálogo mostra só os modelos liberados para esse e-mail.", n: ["Tema novo é pedido ao admin."] },
+    { t: "Preencher os dados", p: "/novo/<id>", d: "Nome, idade, data, horário, local, link do mapa, mensagem e presentes, ao lado da prévia do modelo.", n: ["O convite é criado como rascunho."] },
+    { t: "Revisar e publicar", p: "/convites/<id>", d: "A prévia já mostra os dados reais. Ao publicar, o convite ganha o link.", n: ["A arte pode ser trocada por outra com o mesmo layout."] },
+    { t: "Compartilhar", p: "/convites/<id>", d: "Copie o link ou envie pelo WhatsApp.", n: ["Editar os dados atualiza o link na hora."] },
+    { t: "Acompanhar presenças", p: "/convites/<id>", d: "A lista mostra nomes e o total de pessoas confirmadas.", n: ["Só o dono do convite vê a lista."] }
+  ]},
+  convidado: { label: "Convidado", steps: [
+    { t: "Abrir o link", p: "/c/<slug>", d: "O convite abre sem login, em tela cheia no celular.", n: ["O preview do link usa a arte e os dados da festa."] },
+    { t: "Ver o mapa", p: "/c/<slug>", d: "Abre o link informado, ou uma busca pelo nome do local.", n: [] },
+    { t: "Ver presentes", p: "/c/<slug>", d: "Mostra as sugestões da família.", n: ["O botão some quando não há sugestões."] },
+    { t: "Confirmar presença", p: "/c/<slug>", d: "Informa o nome e quantas pessoas vão, de 1 a 20.", n: ["A confirmação chega ao painel do dono do convite."] }
+  ]}
+};
+
+var ZONES = [
+  { id: "name", l: 13, t: 14.6, w: 74, h: 16, title: "Nome", tokens: ["{{child_name_first}}", "{{child_name_rest}}", 'data-letters'], text: "O nome é montado com imagens do alfabeto: pedra na primeira palavra e verde no restante. Letras e números são reduzidos para caber." },
+  { id: "age", l: 33.4, t: 34.1, w: 33.2, h: 4.6, title: "Idade", tokens: ["{{age_label}}", 'data-letters'], text: "A tábua faz parte da arte e a idade usa o alfabeto de pedra com tom dourado. Sem idade informada, mostra Parabéns!." },
+  { id: "message", l: 24, t: 44.7, w: 52.4, h: 6.4, title: "Mensagem", tokens: ["{{message}}"], text: "Texto livre do cliente. Vazio, o modelo Minecraft usa uma frase padrão. A frase verde abaixo faz parte da arte." },
+  { id: "date", l: 19.8, t: 57.2, w: 18.6, h: 12.6, title: "Data", tokens: ["{{event_date_short}}", "{{event_weekday}}"], text: "A data curta e o dia da semana são calculados pelo sistema." },
+  { id: "time", l: 41.6, t: 57.2, w: 17.4, h: 12.6, title: "Horário", tokens: ["{{event_time}}"], text: "Formatado como 17h ou 18h30." },
+  { id: "place", l: 61.4, t: 57.2, w: 20.4, h: 12.6, title: "Local e mapa", tokens: ["{{location_name}}", 'data-action="maps"'], text: "A área inteira é um link para o mapa." },
+  { id: "rsvp", l: 23.4, t: 73, w: 54.2, h: 9.6, title: "Confirmar presença", tokens: ['data-action="rsvp"'], text: "O botão faz parte da arte. Uma área invisível por cima abre o formulário do sistema." },
+  { id: "gifts", l: 76.4, t: 84.4, w: 22, h: 11.4, title: "Presentes", tokens: ['data-action="gifts"'], text: "A placa abre a lista de sugestões. Sem sugestões, a área fica desativada." }
+];
+
+var FEATURES = [
+  { t: "Criação de modelos", d: "Rascunho com HTML inicial, edição de nome e HTML.", r: "admin", ok: false },
+  { t: "Envio de arte", d: "Upload direto ao Storage, em JPG, PNG ou WebP.", r: "admin", ok: false },
+  { t: "Validação do HTML", d: "Aponta campos e botões ausentes, além de scripts e formulários.", r: "admin", ok: true },
+  { t: "Prévia com dados fictícios", d: "Mostra o modelo antes de publicar e não registra presença.", r: "admin", ok: true },
+  { t: "Liberação por modelo", d: "Para todos os clientes ou por e-mail.", r: "admin", ok: true },
+  { t: "Gestão de clientes", d: "Adiciona e remove e-mails autorizados pelo app.", r: "admin", ok: true },
+  { t: "Catálogo do cliente", d: "Mostra só o que foi publicado e liberado para aquele e-mail.", r: "cliente", ok: true },
+  { t: "Convite a partir do modelo", d: "Copia o HTML e usa a arte do modelo.", r: "cliente", ok: false },
+  { t: "Edição sem nova arte", d: "Dados entram por HTML e mudam na hora.", r: "cliente", ok: true },
+  { t: "Nome em letras 3D", d: "O app monta o nome com o alfabeto do modelo, sem IA, e os dados mudam na hora.", r: "convidado", ok: true },
+  { t: "Lista de presenças", d: "Nomes e total, visíveis só para o dono.", r: "cliente", ok: true },
+  { t: "Convite público", d: "Link sem login, com mapa, presentes e confirmação.", r: "convidado", ok: true },
+  { t: "Isolamento do convite", d: "Sandbox e CSP bloqueiam scripts e acesso a cookies.", r: "convidado", ok: true },
+  { t: "Ajuste automático de texto", d: "Nomes e locais longos reduzem a fonte para caber.", r: "convidado", ok: true }
+];
+
+var CHECKS = [
+  "Aplicar as migrações no Supabase",
+  "Definir o admin e autorizar o primeiro e-mail",
+  "Adicionar a URL de callback no Supabase",
+  "Ativar o login com Google",
+  "Enviar a arte do modelo Minecraft e publicar",
+  "Criar um convite de teste e confirmar presença",
+  "Criar um projeto novo na Vercel, sem usar o projeto niver",
+  "Configurar a região gru1 e as variáveis na Vercel",
+  "Adicionar a URL de produção no Supabase"
+];
+var DONE_BY_DEFAULT = [0, 1];
+
+function el(tag, props, children) {
+  var node = document.createElement(tag);
+  Object.keys(props || {}).forEach(function (key) {
+    if (key === "text") node.textContent = props[key];
+    else if (key === "class") node.className = props[key];
+    else node.setAttribute(key, props[key]);
+  });
+  (children || []).forEach(function (child) { node.appendChild(child); });
+  return node;
+}
+
+function read(key, fallback) {
+  try { var value = localStorage.getItem(key); return value === null ? fallback : JSON.parse(value); }
+  catch (error) { return fallback; }
+}
+function write(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch (error) {}
+}
+
+var role = "admin", stepIndex = 0;
+
+function renderTabs() {
+  var tabs = document.getElementById("tabs");
+  tabs.textContent = "";
+  Object.keys(FLOWS).forEach(function (key) {
+    var tab = el("button", { class: "tab", role: "tab", type: "button", "aria-selected": String(key === role), text: FLOWS[key].label });
+    tab.addEventListener("click", function () { role = key; stepIndex = 0; renderTabs(); renderFlow(); });
+    tabs.appendChild(tab);
+  });
+}
+
+function renderFlow() {
+  var steps = FLOWS[role].steps, list = document.getElementById("steps");
+  list.textContent = "";
+  steps.forEach(function (step, index) {
+    var button = el("button", { class: "step", type: "button", "aria-pressed": String(index === stepIndex) }, [
+      el("b", { text: String(index + 1) }), el("span", { text: step.t })
+    ]);
+    button.addEventListener("click", function () { stepIndex = index; renderFlow(); });
+    list.appendChild(el("li", {}, [button]));
+  });
+
+  var step = steps[stepIndex], detail = document.getElementById("detail");
+  detail.textContent = "";
+  detail.appendChild(el("h3", { text: step.t }));
+  detail.appendChild(el("span", { class: "path", text: step.p }));
+  detail.appendChild(el("p", { text: step.d }));
+  if (step.n.length) {
+    detail.appendChild(el("ul", {}, step.n.map(function (note) { return el("li", { text: note }); })));
+  }
+}
+
+function showZone(zone) {
+  var box = document.getElementById("zone-detail");
+  box.textContent = "";
+  box.appendChild(el("h3", { text: zone.title }));
+  box.appendChild(el("ul", { class: "chips" }, zone.tokens.map(function (token) {
+    return el("li", { class: "chip", text: token });
+  })));
+  box.appendChild(el("p", { text: zone.text }));
+  document.querySelectorAll(".zone").forEach(function (node) {
+    node.setAttribute("aria-pressed", String(node.dataset.id === zone.id));
+  });
+}
+
+function renderZones() {
+  var invite = document.getElementById("invite");
+  ZONES.forEach(function (zone) {
+    var button = el("button", {
+      class: "zone", type: "button", "aria-label": zone.title, "aria-pressed": "false", "data-id": zone.id,
+      style: "left:" + zone.l + "%;top:" + zone.t + "%;width:" + zone.w + "%;height:" + zone.h + "%"
+    });
+    button.addEventListener("click", function () { showZone(zone); });
+    invite.appendChild(button);
+  });
+  showZone(ZONES[0]);
+}
+
+var filter = "todos";
+
+function renderFilters() {
+  var filters = document.getElementById("filters");
+  filters.textContent = "";
+  ["todos", "admin", "cliente", "convidado"].forEach(function (key) {
+    var button = el("button", {
+      class: "tab", type: "button", "aria-selected": String(key === filter),
+      text: key.charAt(0).toUpperCase() + key.slice(1)
+    });
+    button.addEventListener("click", function () { filter = key; renderFilters(); renderFeatures(); });
+    filters.appendChild(button);
+  });
+}
+
+function renderFeatures() {
+  var query = document.getElementById("search").value.trim().toLowerCase();
+  var list = document.getElementById("features");
+  var shown = FEATURES.filter(function (feature) {
+    var text = (feature.t + " " + feature.d).toLowerCase();
+    return (filter === "todos" || feature.r === filter) && text.indexOf(query) >= 0;
+  });
+  list.textContent = "";
+  shown.forEach(function (feature) {
+    list.appendChild(el("li", { class: "feature" }, [
+      el("h3", { text: feature.t }),
+      el("p", { text: feature.d }),
+      el("div", { class: "tags" }, [
+        el("span", { class: "tag", text: feature.r }),
+        el("span", { class: "tag " + (feature.ok ? "ok" : "wait"), text: feature.ok ? "Testado" : "A validar" })
+      ])
+    ]));
+  });
+  document.getElementById("no-results").hidden = shown.length > 0;
+}
+
+function renderChecklist() {
+  var done = read("niver-docs-checks", DONE_BY_DEFAULT), box = document.getElementById("checklist");
+  box.textContent = "";
+  CHECKS.forEach(function (text, index) {
+    var id = "check-" + index;
+    var input = el("input", { type: "checkbox", id: id });
+    input.checked = done.indexOf(index) >= 0;
+    input.addEventListener("change", function () {
+      var next = done.filter(function (item) { return item !== index; });
+      if (input.checked) next.push(index);
+      write("niver-docs-checks", next);
+      renderChecklist();
+    });
+    box.appendChild(el("div", { class: "check" }, [input, el("label", { for: id, text: text })]));
+  });
+  document.getElementById("progress").textContent = done.length + " de " + CHECKS.length + " concluídos";
+}
+
+document.getElementById("search").addEventListener("input", renderFeatures);
+document.getElementById("theme").addEventListener("click", function () {
+  var root = document.documentElement;
+  var current = root.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  root.dataset.theme = current === "dark" ? "light" : "dark";
+  write("niver-docs-theme", root.dataset.theme);
+});
+
+var savedTheme = read("niver-docs-theme", null);
+if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+
+renderTabs();
+renderFlow();
+renderZones();
+renderFilters();
+renderFeatures();
+renderChecklist();
+</script>
+</body>
+</html>
