@@ -1,54 +1,185 @@
 @import "tailwindcss";
 
 @theme {
-  --color-paper: #fff6e9;
-  --color-card: #fffdf9;
-  --color-ink: #2a1f1a;
-  --color-muted: #6f5f54;
-  --color-line: #e7d8c6;
+  --color-paper: #faf6f0;
+  --color-card: #ffffff;
+  --color-sunken: #f3ece2;
+  --color-ink: #1f1611;
+  --color-muted: #6b5d53;
+  --color-line: #eae0d4;
   --color-coral: #c7401d;
-  --color-coral-dark: #a53214;
-  --color-sun: #ffc94a;
+  --color-coral-dark: #a93515;
+  --color-on-coral: #ffffff;
+  --color-sun: #f6b93b;
   --color-leaf: #1f7a4d;
   --color-danger: #b3261e;
-  --font-display: var(--font-baloo), system-ui, sans-serif;
-  --font-sans: var(--font-nunito), system-ui, sans-serif;
+
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-figtree), system-ui, sans-serif;
+
+  --shadow-soft: 0 1px 2px rgb(74 40 16 / 0.05), 0 10px 28px -12px rgb(74 40 16 / 0.14);
+  --shadow-lift: 0 2px 4px rgb(74 40 16 / 0.06), 0 24px 48px -16px rgb(74 40 16 / 0.28);
+  --shadow-glow: 0 1px 2px rgb(120 40 10 / 0.2), 0 10px 24px -10px rgb(199 64 29 / 0.55);
+
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-rise: rise 0.7s var(--ease-soft) both;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+  @keyframes float {
+    50% {
+      translate: 0 -10px;
+    }
+  }
+  @keyframes shimmer {
+    to {
+      background-position: -200% 0;
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-paper: #15100d;
+    --color-card: #1f1814;
+    --color-sunken: #2a211b;
+    --color-ink: #f7efe6;
+    --color-muted: #b5a598;
+    --color-line: #382d25;
+    --color-coral: #ff7a52;
+    --color-coral-dark: #ff9473;
+    --color-on-coral: #260d04;
+    --color-leaf: #62d19c;
+    --color-danger: #ff8d82;
+
+    --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 28px -12px rgb(0 0 0 / 0.5);
+    --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.3), 0 24px 48px -16px rgb(0 0 0 / 0.7);
+    --shadow-glow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 24px -10px rgb(255 122 82 / 0.45);
+  }
 }
 
 html {
+  color-scheme: light dark;
   background: var(--color-paper);
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--color-paper);
+  min-height: 100dvh;
+  background:
+    radial-gradient(52rem 26rem at 88% -8rem, color-mix(in oklab, var(--color-sun) 20%, transparent), transparent 70%),
+    radial-gradient(44rem 24rem at -6% -6rem, color-mix(in oklab, var(--color-coral) 13%, transparent), transparent 70%),
+    var(--color-paper);
+  background-repeat: no-repeat;
   color: var(--color-ink);
   font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
+  text-rendering: optimizeLegibility;
+}
+
+.font-display {
+  font-variation-settings: "SOFT" 100;
+  letter-spacing: -0.02em;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--color-coral) 25%, transparent);
 }
 
 :focus-visible {
-  outline: 3px solid var(--color-coral);
-  outline-offset: 2px;
+  outline: 2px solid var(--color-coral);
+  outline-offset: 3px;
 }
 
 @layer components {
   .button-primary,
-  .button-secondary {
-    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-60;
+  .button-secondary,
+  .button-danger {
+    @apply inline-flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-full px-6 text-[0.95rem] font-semibold whitespace-nowrap transition duration-200 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100;
   }
   .button-primary {
-    @apply bg-coral text-white hover:bg-coral-dark;
+    @apply bg-coral text-on-coral shadow-glow hover:bg-coral-dark;
   }
   .button-secondary {
-    @apply border border-line bg-card text-ink hover:bg-paper;
+    @apply border border-line bg-card text-ink shadow-soft hover:border-ink/25;
   }
+  .button-danger {
+    @apply bg-danger text-paper hover:opacity-90;
+  }
+  .icon-button {
+    @apply inline-flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted transition duration-200 hover:bg-ink/5 hover:text-ink active:scale-95;
+  }
+
   .field {
-    @apply block w-full min-h-12 rounded-xl border border-line bg-white px-3.5 py-2.5 text-base;
+    @apply block min-h-12 w-full rounded-2xl border border-line bg-card px-4 py-3 text-base text-ink transition duration-200 placeholder:text-muted/60 hover:border-ink/20;
+  }
+  .field:focus {
+    @apply border-coral ring-4 ring-coral/15 outline-none;
   }
   .label {
-    @apply mb-1.5 block text-sm font-bold;
+    @apply mb-1.5 block text-sm font-semibold;
   }
+  .hint {
+    @apply mt-1.5 text-sm text-muted;
+  }
+
   .panel {
-    @apply rounded-2xl border border-line bg-card p-5;
+    @apply rounded-3xl border border-line bg-card p-5 shadow-soft sm:p-7;
+  }
+  .eyebrow {
+    @apply text-xs font-bold tracking-[0.16em] text-coral uppercase;
+  }
+  .page-title {
+    @apply font-display text-4xl leading-[1.05] font-semibold text-balance sm:text-5xl;
+  }
+  .section-title {
+    @apply font-display text-2xl leading-tight font-semibold;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold;
+  }
+  .badge-dot {
+    @apply size-1.5 rounded-full bg-current;
+  }
+
+  /* Moldura de celular das prévias. A cor é fixa: o aparelho é escuro nos dois temas. */
+  .phone {
+    @apply relative mx-auto w-full max-w-[230px] rounded-[2.4rem] bg-[#1a1310] p-2 shadow-lift ring-1 ring-white/10 sm:max-w-[290px];
+  }
+  .phone > * {
+    @apply block aspect-[9/16] w-full rounded-[1.9rem] bg-white;
+  }
+
+  .skeleton {
+    @apply animate-shimmer rounded-2xl bg-[linear-gradient(90deg,var(--color-sunken)_25%,var(--color-line)_50%,var(--color-sunken)_75%)] bg-[length:200%_100%];
+  }
+
+  /* Entrada em cascata dos itens de uma lista. */
+  .stagger > * {
+    animation: var(--animate-rise);
+  }
+  .stagger > *:nth-child(2) { animation-delay: 60ms; }
+  .stagger > *:nth-child(3) { animation-delay: 120ms; }
+  .stagger > *:nth-child(4) { animation-delay: 180ms; }
+  .stagger > *:nth-child(5) { animation-delay: 240ms; }
+  .stagger > *:nth-child(n + 6) { animation-delay: 300ms; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

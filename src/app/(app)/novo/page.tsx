@@ -1,7 +1,12 @@
-import Link from "next/link";
+import type { Metadata } from "next";
+import { ArtCard, EmptyState } from "@/components/art-card";
+import { Icon } from "@/components/icons";
+import { Stepper } from "@/components/stepper";
 import { ART_BUCKET } from "@/lib/invitation";
 import { createClient } from "@/lib/supabase/server";
 import type { Template } from "@/lib/template";
+
+export const metadata: Metadata = { title: "Novo convite" };
 
 type Row = Pick<Template, "id" | "name" | "art_path">;
 
@@ -17,40 +22,35 @@ export default async function NewInvitationPage() {
 
   return (
     <main>
-      <h1 className="font-display text-3xl font-bold">Escolha um modelo</h1>
-      <p className="mt-1 mb-5 text-muted">Depois é só preencher os dados da festa.</p>
+      <div className="mb-8 animate-rise sm:mb-10">
+        <Stepper current={0} />
+        <h1 className="page-title mt-5">Escolha um modelo</h1>
+        <p className="mt-3 text-lg text-muted">Depois é só preencher os dados da festa.</p>
+      </div>
 
       {templates.length === 0 ? (
-        <div className="panel text-center">
-          <p className="font-display text-xl font-bold">
-            {allowed === true ? "Nenhum modelo liberado ainda" : "Sua conta ainda não está autorizada"}
-          </p>
-          <p className="mt-1 text-muted">
-            {allowed === true
-              ? "Peça o tema que você quer. Ele aparece aqui assim que for liberado."
-              : "Peça a liberação do seu e-mail para criar convites."}
-          </p>
-        </div>
+        <EmptyState
+          icon={<Icon name={allowed === true ? "image" : "mail"} className="size-8" />}
+          title={allowed === true ? "Nenhum modelo liberado ainda" : "Sua conta ainda não está autorizada"}
+        >
+          {allowed === true
+            ? "Peça o tema que você quer. Ele aparece aqui assim que for liberado."
+            : "Peça a liberação do seu e-mail para criar convites."}
+        </EmptyState>
       ) : (
-        <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+        <ul className="stagger grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4">
           {templates.map((template) => (
             <li key={template.id}>
-              <Link
+              <ArtCard
                 href={`/novo/${template.id}`}
-                className="block overflow-hidden rounded-2xl border border-line bg-card"
-              >
-                {template.art_path && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={supabase.storage.from(ART_BUCKET).getPublicUrl(template.art_path).data.publicUrl}
-                    alt=""
-                    className="aspect-[9/14] w-full object-cover object-top"
-                  />
-                )}
-                <div className="p-3">
-                  <p className="truncate font-bold">{template.name}</p>
-                </div>
-              </Link>
+                imageUrl={
+                  template.art_path
+                    ? supabase.storage.from(ART_BUCKET).getPublicUrl(template.art_path).data.publicUrl
+                    : null
+                }
+                title={template.name}
+                subtitle="Usar este modelo"
+              />
             </li>
           ))}
         </ul>

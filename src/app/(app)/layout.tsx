@@ -1,35 +1,49 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { signOut } from "@/app/actions";
+import { Icon } from "@/components/icons";
+import { Logo } from "@/components/logo";
+import { BottomNav, TopNav } from "@/components/nav";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function AppLayout({ children }: { children: ReactNode }) {
   const supabase = await createClient();
-  const { data: isAdmin } = await supabase.rpc("is_admin");
+  const [{ data: isAdmin }, { data: auth }] = await Promise.all([
+    supabase.rpc("is_admin"),
+    supabase.auth.getClaims(),
+  ]);
+  const admin = isAdmin === true;
+  const email = typeof auth?.claims.email === "string" ? auth.claims.email : "";
 
   return (
-    <div className="mx-auto max-w-3xl px-4 pb-12">
-      <header className="flex items-center justify-between gap-3 py-4">
-        <Link href="/" className="font-display text-3xl font-extrabold text-coral">
-          Niver
-        </Link>
-        <nav className="flex items-center gap-1 text-sm font-bold text-muted">
-          {isAdmin === true && (
-            <>
-              <Link href="/admin/modelos" className="flex min-h-11 items-center px-2 hover:text-ink">
-                Modelos
-              </Link>
-              <Link href="/admin/clientes" className="flex min-h-11 items-center px-2 hover:text-ink">
-                Clientes
-              </Link>
-            </>
-          )}
-          <form action={signOut}>
-            <button className="min-h-11 px-2 font-bold hover:text-ink">Sair</button>
-          </form>
-        </nav>
+    <>
+      <header className="sticky top-0 z-30 border-b border-line/70 bg-paper/75 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-3 px-4 sm:px-6">
+          <Link href="/" aria-label="Niver, início" className="rounded-xl">
+            <Logo />
+          </Link>
+          {admin && <TopNav />}
+          <div className="flex items-center gap-1">
+            {email && (
+              <span
+                title={email}
+                className="flex size-9 items-center justify-center rounded-full bg-ink text-sm font-bold text-paper uppercase"
+              >
+                {email.charAt(0)}
+              </span>
+            )}
+            <form action={signOut}>
+              <button className="icon-button" aria-label="Sair" title="Sair">
+                <Icon name="logout" />
+              </button>
+            </form>
+          </div>
+        </div>
       </header>
-      {children}
-    </div>
+      <div className={`mx-auto max-w-5xl px-4 pt-8 sm:px-6 sm:pt-12 ${admin ? "pb-32 sm:pb-20" : "pb-20"}`}>
+        {children}
+      </div>
+      {admin && <BottomNav />}
+    </>
   );
 }

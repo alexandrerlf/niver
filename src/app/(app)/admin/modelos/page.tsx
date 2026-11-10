@@ -1,10 +1,16 @@
-import Link from "next/link";
+import type { Metadata } from "next";
+import { ArtCard, EmptyState, type Tone } from "@/components/art-card";
+import { Icon } from "@/components/icons";
 import { NewTemplateForm } from "@/components/new-template-form";
 import { ART_BUCKET } from "@/lib/invitation";
 import { createClient } from "@/lib/supabase/server";
-import { STATUS_LABELS, type Template } from "@/lib/template";
+import { STATUS_LABELS, type Template, type TemplateStatus } from "@/lib/template";
+
+export const metadata: Metadata = { title: "Modelos" };
 
 type Row = Pick<Template, "id" | "name" | "status" | "visibility" | "art_path">;
+
+const TONES: Record<TemplateStatus, Tone> = { draft: "sun", published: "leaf", archived: "muted" };
 
 export default async function TemplatesPage() {
   const supabase = await createClient();
@@ -15,44 +21,36 @@ export default async function TemplatesPage() {
   const templates = (data ?? []) as Row[];
 
   return (
-    <main className="space-y-5">
-      <h1 className="font-display text-3xl font-bold">Modelos</h1>
+    <main>
+      <div className="mb-8 animate-rise sm:mb-10">
+        <p className="eyebrow">Admin</p>
+        <h1 className="page-title mt-2">Modelos</h1>
+        <p className="mt-3 text-lg text-muted">O catálogo que os clientes usam para criar convites.</p>
+      </div>
 
-      <section className="panel">
+      <section className="panel mb-8 animate-rise">
         <NewTemplateForm />
       </section>
 
       {templates.length === 0 ? (
-        <div className="panel text-center">
-          <p className="font-display text-xl font-bold">Nenhum modelo ainda</p>
-          <p className="mt-1 text-muted">Crie o primeiro acima.</p>
-        </div>
+        <EmptyState icon={<Icon name="grid" className="size-8" />} title="Nenhum modelo ainda">
+          Dê um nome ao primeiro modelo acima. Depois é só enviar a arte e colar o HTML.
+        </EmptyState>
       ) : (
-        <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+        <ul className="stagger grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4">
           {templates.map((template) => (
             <li key={template.id}>
-              <Link
+              <ArtCard
                 href={`/admin/modelos/${template.id}`}
-                className="block overflow-hidden rounded-2xl border border-line bg-card"
-              >
-                {template.art_path ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={supabase.storage.from(ART_BUCKET).getPublicUrl(template.art_path).data.publicUrl}
-                    alt=""
-                    className="aspect-[9/14] w-full object-cover object-top"
-                  />
-                ) : (
-                  <div className="aspect-[9/14] bg-sun/40" />
-                )}
-                <div className="p-3">
-                  <p className="truncate font-bold">{template.name}</p>
-                  <p className="truncate text-sm text-muted">
-                    {STATUS_LABELS[template.status]}
-                    {template.visibility === "selected" ? " · por e-mail" : ""}
-                  </p>
-                </div>
-              </Link>
+                imageUrl={
+                  template.art_path
+                    ? supabase.storage.from(ART_BUCKET).getPublicUrl(template.art_path).data.publicUrl
+                    : null
+                }
+                title={template.name}
+                subtitle={template.visibility === "selected" ? "Liberado por e-mail" : "Todos os clientes"}
+                badge={{ label: STATUS_LABELS[template.status], tone: TONES[template.status] }}
+              />
             </li>
           ))}
         </ul>
