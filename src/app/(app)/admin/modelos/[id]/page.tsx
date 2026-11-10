@@ -2,10 +2,18 @@ import { notFound } from "next/navigation";
 import { saveTemplateArt, setTemplateStatus } from "@/app/admin-actions";
 import { ActionButton } from "@/components/action-button";
 import { ArtUpload } from "@/components/art-upload";
+import { BackLink } from "@/components/back-link";
+import { Icon } from "@/components/icons";
 import { TemplateForm } from "@/components/template-form";
 import { templateProblems } from "@/lib/render";
 import { createClient } from "@/lib/supabase/server";
-import { STATUS_LABELS, type Template } from "@/lib/template";
+import { STATUS_LABELS, type Template, type TemplateStatus } from "@/lib/template";
+
+const BADGES: Record<TemplateStatus, string> = {
+  draft: "bg-sun/25 text-ink",
+  published: "bg-leaf/12 text-leaf",
+  archived: "bg-sunken text-muted",
+};
 
 export default async function TemplatePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -23,71 +31,93 @@ export default async function TemplatePage({ params }: { params: Promise<{ id: s
   const problems = templateProblems(template.html);
 
   return (
-    <main className="space-y-5">
-      <div>
-        <h1 className="font-display text-3xl font-bold">{template.name}</h1>
-        <p className="text-muted">{STATUS_LABELS[template.status]}</p>
+    <main>
+      <div className="mb-8 animate-rise sm:mb-10">
+        <BackLink href="/admin/modelos">Modelos</BackLink>
+        <div className="mt-4">
+          <span className={`badge ${BADGES[template.status]}`}>
+            <span className={`badge-dot ${template.status === "draft" ? "text-sun" : ""}`} />
+            {STATUS_LABELS[template.status]}
+          </span>
+        </div>
+        <h1 className="page-title mt-3 break-words">{template.name}</h1>
       </div>
 
-      <section className="grid gap-5 sm:grid-cols-[280px_1fr]">
-        {template.art_path ? (
-          <iframe
-            key={template.updated_at}
-            src={`/previa/modelo/${template.id}`}
-            title="Prévia do modelo com dados de exemplo"
-            sandbox="allow-scripts"
-            className="mx-auto aspect-[9/16] w-full max-w-[280px] rounded-2xl border border-line bg-white"
-          />
-        ) : (
-          <div className="mx-auto flex aspect-[9/16] w-full max-w-[280px] items-center justify-center rounded-2xl border border-line bg-sun/40 p-4 text-center font-bold">
-            Envie a arte para ver a prévia
-          </div>
-        )}
-        <div className="space-y-5">
-          <div className="panel">
-            <h2 className="font-display text-xl font-bold">Arte</h2>
-            <p className="mb-4 text-sm text-muted">JPG, PNG ou WebP, até 8 MB.</p>
-            <ArtUpload
-              folder={`templates/${template.id}`}
-              save={saveTemplateArt.bind(null, template.id)}
-              label={template.art_path ? "Trocar arte" : "Enviar arte"}
-            />
-          </div>
-          <div className="panel">
-            <h2 className="font-display text-xl font-bold">Publicação</h2>
-            {problems.length > 0 && (
-              <div className="mt-2 text-sm font-semibold text-danger">
-                <p>Antes de publicar, ajuste o HTML:</p>
-                <ul className="list-disc pl-5">
-                  {problems.map((problem) => (
-                    <li key={problem}>{problem}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            <p className="mt-2 mb-4 text-sm text-muted">
-              Convites já criados guardam uma cópia e não mudam quando o modelo é editado.
-            </p>
-            {template.status === "published" ? (
-              <ActionButton
-                action={setTemplateStatus.bind(null, template.id, "archived")}
-                label="Arquivar modelo"
-                pendingLabel="Arquivando..."
-                className="button-secondary"
+      <section className="grid animate-rise items-start gap-8 lg:grid-cols-[290px_1fr] lg:gap-12">
+        <figure className="lg:sticky lg:top-24">
+          <div className="phone">
+            {template.art_path ? (
+              <iframe
+                key={template.updated_at}
+                src={`/previa/modelo/${template.id}`}
+                title="Prévia do modelo com dados de exemplo"
+                sandbox="allow-scripts"
               />
             ) : (
-              <ActionButton
-                action={setTemplateStatus.bind(null, template.id, "published")}
-                label="Publicar para clientes"
-                pendingLabel="Publicando..."
-              />
+              <div className="flex! flex-col items-center justify-center gap-3 bg-sunken! p-6 text-center font-semibold text-muted">
+                <Icon name="image" className="size-8" />
+                Envie a arte para ver a prévia
+              </div>
             )}
           </div>
-        </div>
-      </section>
+          <figcaption className="mt-4 text-center text-sm text-muted">Prévia com dados de exemplo</figcaption>
+        </figure>
 
-      <section className="panel">
-        <TemplateForm template={template} emails={emails} />
+        <div className="min-w-0 space-y-6">
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div className="panel">
+              <h2 className="section-title">Arte</h2>
+              <p className="mt-1 mb-5 text-sm text-muted">
+                JPG, PNG ou WebP, até 8 MB. Sem nome, data ou local escritos.
+              </p>
+              <ArtUpload
+                folder={`templates/${template.id}`}
+                save={saveTemplateArt.bind(null, template.id)}
+                label={template.art_path ? "Trocar arte" : "Enviar arte"}
+              />
+            </div>
+            <div className="panel">
+              <h2 className="section-title">Publicação</h2>
+              <p className="mt-1 mb-5 text-sm text-muted">
+                Convites já criados guardam uma cópia e não mudam quando o modelo é editado.
+              </p>
+              {template.status === "published" ? (
+                <ActionButton
+                  action={setTemplateStatus.bind(null, template.id, "archived")}
+                  label="Arquivar modelo"
+                  pendingLabel="Arquivando..."
+                  className="button-secondary"
+                />
+              ) : (
+                <ActionButton
+                  action={setTemplateStatus.bind(null, template.id, "published")}
+                  label="Publicar para clientes"
+                  pendingLabel="Publicando..."
+                  icon={<Icon name="sparkles" className="size-[18px]" />}
+                />
+              )}
+            </div>
+          </div>
+
+          {problems.length > 0 && (
+            <div role="alert" className="rounded-3xl border border-danger/25 bg-danger/8 p-5 text-danger sm:p-6">
+              <p className="flex items-center gap-2 font-bold">
+                <Icon name="alert" />
+                Antes de publicar, ajuste o HTML
+              </p>
+              <ul className="mt-2 list-disc space-y-1 pl-9 text-sm font-medium">
+                {problems.map((problem) => (
+                  <li key={problem}>{problem}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <div className="panel">
+            <h2 className="section-title mb-6">Configuração</h2>
+            <TemplateForm template={template} emails={emails} />
+          </div>
+        </div>
       </section>
     </main>
   );

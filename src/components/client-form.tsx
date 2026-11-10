@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import type { FormState } from "@/app/actions";
 import { addClient } from "@/app/admin-actions";
 import { FormFeedback } from "@/components/form-feedback";
+import { Icon, Spinner } from "@/components/icons";
 
 const initial: FormState = {};
 
@@ -15,15 +16,22 @@ export function ClientForm() {
       <label className="label" htmlFor="email">
         E-mail do cliente
       </label>
-      <div className="flex gap-3">
-        <input className="field" id="email" name="email" type="email" required autoComplete="off" />
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <input
+          className="field"
+          id="email"
+          name="email"
+          type="email"
+          required
+          autoComplete="off"
+          placeholder="cliente@exemplo.com"
+        />
         <button className="button-primary shrink-0" disabled={pending}>
+          {pending ? <Spinner /> : <Icon name="plus" className="size-[18px]" />}
           {pending ? "Adicionando..." : "Adicionar"}
         </button>
       </div>
-      <div className="mt-2">
-        <FormFeedback state={state} />
-      </div>
+      <FormFeedback state={state} className="mt-3" />
     </form>
   );
 }

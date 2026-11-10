@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { createInvitation } from "@/app/actions";
+import { BackLink } from "@/components/back-link";
 import { DetailsForm } from "@/components/details-form";
+import { Stepper } from "@/components/stepper";
 import { createClient } from "@/lib/supabase/server";
 import type { Template } from "@/lib/template";
 
@@ -16,17 +18,29 @@ export default async function NewFromTemplatePage({ params }: { params: Promise<
   if (!template || template.status !== "published") notFound();
 
   return (
-    <main className="space-y-5">
-      <h1 className="font-display text-3xl font-bold">{template.name}</h1>
-      <section className="grid gap-5 sm:grid-cols-[280px_1fr]">
-        <iframe
-          src={`/previa/modelo/${template.id}`}
-          title="Prévia do modelo com dados de exemplo"
-          sandbox="allow-scripts"
-          className="mx-auto aspect-[9/16] w-full max-w-[280px] rounded-2xl border border-line bg-white"
-        />
+    <main>
+      <div className="mb-8 animate-rise sm:mb-10">
+        <BackLink href="/novo">Modelos</BackLink>
+        <div className="mt-3">
+          <Stepper current={1} />
+        </div>
+        <h1 className="page-title mt-5">{template.name}</h1>
+        <p className="mt-3 text-lg text-muted">Preencha os dados. Você confere tudo antes de publicar.</p>
+      </div>
+
+      <section className="grid animate-rise items-start gap-8 lg:grid-cols-[290px_1fr] lg:gap-12">
+        <figure className="lg:sticky lg:top-24">
+          <div className="phone">
+            <iframe
+              src={`/previa/modelo/${template.id}`}
+              title="Prévia do modelo com dados de exemplo"
+              sandbox="allow-scripts"
+            />
+          </div>
+          <figcaption className="mt-4 text-center text-sm text-muted">Prévia com dados de exemplo</figcaption>
+        </figure>
         <div className="panel">
-          <h2 className="mb-4 font-display text-xl font-bold">Dados da festa</h2>
+          <h2 className="section-title mb-6">Dados da festa</h2>
           <DetailsForm save={createInvitation.bind(null, template.id)} submitLabel="Criar convite" />
         </div>
       </section>

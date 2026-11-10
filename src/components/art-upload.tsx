@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useRef, useState, type ChangeEvent } from "react";
 import type { FormState } from "@/app/actions";
+import { ErrorMessage } from "@/components/form-feedback";
+import { Icon, Spinner } from "@/components/icons";
 import { ART_BUCKET, ART_TYPES, MAX_ART_BYTES } from "@/lib/invitation";
 import { createClient } from "@/lib/supabase/browser";
 
@@ -67,13 +69,10 @@ export function ArtUpload({
         disabled={busy}
         onClick={() => input.current?.click()}
       >
+        {busy ? <Spinner /> : <Icon name="upload" className="size-[18px]" />}
         {busy ? "Enviando..." : label}
       </button>
-      {error && (
-        <p role="alert" className="mt-2 text-sm font-semibold text-danger">
-          {error}
-        </p>
-      )}
+      {error && <ErrorMessage className="mt-3">{error}</ErrorMessage>}
     </div>
   );
 }
