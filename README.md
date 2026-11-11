@@ -21,6 +21,7 @@ Os textos ficam fora da imagem. Corrigir data ou local não exige nova arte.
 - Os botões usam `data-action="rsvp"`, `data-action="maps"` e `data-action="gifts"`.
 - `data-fit` reduz a fonte de um texto até ele caber.
 - `templates/minecraft` guarda o primeiro modelo, com a arte limpa e o HTML.
+- `templates/bluey` guarda um modelo em que a arte é só o cenário: os cartões e botões são desenhados pelo HTML, então dá para trocar a arte sem reposicionar nada. `arte.svg` é a fonte editável de `arte.jpg`.
 
 Cada convite guarda uma cópia do HTML, então editar um modelo não altera convites já criados.
 

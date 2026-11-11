@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Convite de {{child_name}}</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#27376b;--blue:#4f8fd6;--sky:#bfe3fb;--cream:#fdf1d6;--orange:#f7a440;--yellow:#ffd35c;--coral:#ef7b5a;--invite-accent:#f7a440;--invite-on-accent:#27376b}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:#3f7fc4;color:var(--navy);font-family:'Fredoka',ui-rounded,system-ui,sans-serif;font-weight:500;overflow:hidden}
+.stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.bg{position:absolute;inset:-6%;width:112%;height:112%;object-fit:cover;filter:blur(26px) brightness(.8) saturate(1.1);pointer-events:none}
+.card{position:relative;container-type:inline-size;width:min(100vw,calc(100dvh * 941 / 1672));aspect-ratio:941/1672;overflow:hidden}
+.art{display:block;width:100%;height:100%;user-select:none;-webkit-user-drag:none}
+.slot{position:absolute;display:flex;align-items:center;justify-content:center;margin:0;text-align:center;overflow:hidden}
+
+/* Para trocar a arte: as posições abaixo são porcentagens do cartão (941 x 1672). */
+.hello{left:18%;top:10.6%;width:64%;height:3.4%;font-size:4.3cqw;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#fff;text-shadow:0 .35cqw 0 var(--navy),.3cqw 0 0 var(--navy),-.3cqw 0 0 var(--navy),0 -.3cqw 0 var(--navy)}
+.name{left:14%;top:14.2%;width:72%;height:13.4%;padding:0 1.6cqw;font-size:17cqw;font-weight:700;line-height:1;color:var(--navy);text-wrap:balance;text-shadow:.5cqw 0 0 #fff,-.5cqw 0 0 #fff,0 .5cqw 0 #fff,0 -.5cqw 0 #fff,.36cqw .36cqw 0 #fff,-.36cqw .36cqw 0 #fff,.36cqw -.36cqw 0 #fff,-.36cqw -.36cqw 0 #fff,0 1.1cqw 0 rgba(39,55,107,.28)}
+.age{left:29%;top:28.6%;width:42%;height:5%;font-size:5.6cqw;font-weight:700;line-height:1;white-space:nowrap;color:var(--navy);background:var(--orange);border:.6cqw solid var(--navy);border-radius:99cqw;box-shadow:0 .8cqw 0 var(--navy)}
+.age:empty::before{content:"Parabéns!"}
+.message{left:13%;top:36.2%;width:74%;height:9.6%;padding:1.4cqw 4cqw;font-size:4.5cqw;line-height:1.12;background:rgba(255,255,255,.92);border:.6cqw solid var(--navy);border-radius:5cqw;box-shadow:0 .8cqw 0 var(--navy)}
+.message:empty::before{content:"Vem brincar e comemorar com a gente! Vai ter muita diversão."}
+
+.tile{position:absolute;top:48.4%;width:24.6%;height:13.4%;display:flex;flex-direction:column;background:#fff;border:.6cqw solid var(--navy);border-radius:4.4cqw;box-shadow:0 .8cqw 0 var(--navy);overflow:hidden;color:var(--navy);text-decoration:none}
+.tile b{flex:none;display:block;padding:.9cqw 0 .7cqw;font-size:3.2cqw;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center;border-bottom:.6cqw solid var(--navy)}
+.tile-date{left:10.1%}.tile-date b{background:var(--sky)}
+.tile-time{left:37.7%}.tile-time b{background:var(--yellow)}
+.tile-place{left:65.3%}.tile-place b{background:var(--coral);color:#fff}
+.tile .value{flex:1;margin:0;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 1.2cqw;text-align:center;overflow:hidden}
+/* O ajuste de fonte (data-fit) precisa de caixas com altura fixa. */
+.tile .row{flex:none;display:flex;align-items:center;justify-content:center;width:100%;overflow:hidden;white-space:nowrap}
+.date-day{height:44%;font-size:4.7cqw;font-weight:700;line-height:1}
+.date-week{height:28%;font-size:3.4cqw;line-height:1}
+.time-value{font-size:6.8cqw;font-weight:700;line-height:1;white-space:nowrap}
+.place-value{font-size:3.6cqw;font-weight:600;line-height:1.08}
+.tile .more{flex:none;padding:0 0 .9cqw;font-size:2.7cqw;font-weight:600;text-align:center;color:var(--blue);text-decoration:underline}
+
+.btn{position:absolute;display:flex;align-items:center;justify-content:center;gap:2cqw;padding:0 3cqw;border:.6cqw solid var(--navy);border-radius:99cqw;font-family:inherit;font-weight:700;color:var(--navy);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .1s,box-shadow .1s,filter .15s}
+.btn:hover,.btn:focus-visible,.tile-place:hover,.tile-place:focus-visible{filter:brightness(1.06);outline:.7cqw solid #fff;outline-offset:.3cqw}
+.btn:active{transform:translateY(.6cqw);box-shadow:0 .3cqw 0 var(--navy)}
+.btn-rsvp{left:14%;top:65.4%;width:72%;height:7.2%;font-size:6cqw;background:var(--orange);box-shadow:0 1.1cqw 0 var(--navy)}
+.btn-gifts{left:23%;top:74.6%;width:54%;height:5%;font-size:4.1cqw;background:var(--cream);box-shadow:0 .9cqw 0 var(--navy)}
+.paw{width:1.1em;height:1.1em;flex:none;fill:currentColor}
+
+/* Janelas do sistema, no visual do tema. */
+.nv-dialog.nv-dialog{width:min(92vw,430px);max-width:none;max-height:calc(100dvh - 24px);overflow:auto;color:#27376b;font:500 17px/1.3 'Fredoka',ui-rounded,system-ui,sans-serif}
+.nv-dialog.nv-dialog::backdrop{background:rgba(26,40,84,.72)}
+.nv-dialog .nv-box{background:#fdf1d6;border:4px solid #27376b;border-radius:28px;box-shadow:0 8px 0 #27376b;padding:22px 20px 20px}
+.nv-dialog .nv-box h2{margin:0 0 8px;font-size:27px;font-weight:700;line-height:1.1;color:#27376b}
+.nv-dialog .nv-sub{margin:0 0 10px;opacity:.9}
+.nv-dialog .nv-box label{margin:12px 0 4px;font-weight:600}
+.nv-dialog .nv-box input{min-height:48px;padding:8px 14px;border:3px solid #27376b;border-radius:16px;background:#fff;color:#27376b;font-size:18px}
+.nv-dialog .nv-box input:focus{outline:3px solid #4f8fd6;outline-offset:2px}
+.nv-dialog .nv-row{gap:10px;margin-top:18px}
+.nv-dialog .nv-btn{flex:.7;min-height:48px;border:3px solid #27376b;border-radius:99px;background:#fff;color:#27376b;font-size:17px;font-weight:700;box-shadow:0 4px 0 #27376b}
+.nv-dialog .nv-btn:hover,.nv-dialog .nv-btn:focus-visible{filter:brightness(1.05);outline:3px solid #4f8fd6;outline-offset:2px}
+.nv-dialog .nv-btn.nv-primary{flex:1;background:#f7a440;border-color:#27376b}
+.nv-dialog .nv-status{font-weight:600}
+.nv-dialog .nv-error{color:#b3261e}
+.nv-dialog .nv-ok{color:#1c7a45}
+.nv-dialog .nv-hint{opacity:.75}
+.nv-dialog .nv-box ul{margin:0;padding:0;list-style:none}
+.nv-dialog .nv-box li{margin:0 0 8px;padding:9px 14px;border:3px solid #27376b;border-radius:16px;background:#fff}
+.nv-dialog .nv-box li b{color:#2f6fc0;font-weight:700}
+@media (prefers-reduced-motion:reduce){.btn{transition:none}}
+</style>
+</head>
+<body>
+<div class="stage">
+<img class="bg" src="{{art_url}}" alt="">
+<main class="card">
+  <img class="art" src="{{art_url}}" alt="Quintal ensolarado com balões, bandeirinhas e presentes">
+  <p class="slot hello" data-fit>Você é meu convidado!</p>
+  <h1 class="slot name" data-fit>{{child_name}}</h1>
+  <p class="slot age" data-fit>{{age_label}}</p>
+  <p class="slot message" data-fit>{{message}}</p>
+
+  <div class="tile tile-date">
+    <b>Data</b>
+    <p class="value"><span class="row date-day" data-fit>{{event_date_short}}</span><span class="row date-week" data-fit>{{event_weekday}}</span></p>
+  </div>
+  <div class="tile tile-time">
+    <b>Horário</b>
+    <p class="value time-value" data-fit>{{event_time}}</p>
+  </div>
+  <a class="tile tile-place" data-action="maps" aria-label="Local: {{location_name}}. Abrir no mapa">
+    <b>Local</b>
+    <span class="value place-value" data-fit>{{location_name}}</span>
+    <span class="more">ver no mapa</span>
+  </a>
+
+  <button class="btn btn-rsvp" type="button" data-action="rsvp">
+    <svg class="paw" viewBox="-40 -42 80 76" aria-hidden="true"><ellipse cx="0" cy="12" rx="22" ry="18"/><ellipse cx="-26" cy="-12" rx="9" ry="12"/><ellipse cx="-9" cy="-26" rx="9" ry="13"/><ellipse cx="10" cy="-26" rx="9" ry="13"/><ellipse cx="27" cy="-12" rx="9" ry="12"/></svg>
+    Confirmar presença
+  </button>
+  <button class="btn btn-gifts" type="button" data-action="gifts">Sugestões de presentes</button>
+</main>
+</div>
+</body>
+</html>
