@@ -16,15 +16,16 @@ body{margin:0;background:#3f7fc4;color:var(--navy);font-family:'Fredoka',ui-roun
 .art{display:block;width:100%;height:100%;user-select:none;-webkit-user-drag:none}
 .slot{position:absolute;display:flex;align-items:center;justify-content:center;margin:0;text-align:center;overflow:hidden}
 
-/* Para trocar a arte: as posições abaixo são porcentagens do cartão (941 x 1672). */
-.hello{left:18%;top:10.6%;width:64%;height:3.4%;font-size:4.3cqw;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#fff;text-shadow:0 .35cqw 0 var(--navy),.3cqw 0 0 var(--navy),-.3cqw 0 0 var(--navy),0 -.3cqw 0 var(--navy)}
-.name{left:14%;top:14.2%;width:72%;height:13.4%;padding:0 1.6cqw;font-size:17cqw;font-weight:700;line-height:1;color:var(--navy);text-wrap:balance;text-shadow:.5cqw 0 0 #fff,-.5cqw 0 0 #fff,0 .5cqw 0 #fff,0 -.5cqw 0 #fff,.36cqw .36cqw 0 #fff,-.36cqw .36cqw 0 #fff,.36cqw -.36cqw 0 #fff,-.36cqw -.36cqw 0 #fff,0 1.1cqw 0 rgba(39,55,107,.28)}
-.age{left:29%;top:28.6%;width:42%;height:5%;font-size:5.6cqw;font-weight:700;line-height:1;white-space:nowrap;color:var(--navy);background:var(--orange);border:.6cqw solid var(--navy);border-radius:99cqw;box-shadow:0 .8cqw 0 var(--navy)}
+/* As posições são porcentagens do cartão (941 x 1672). A placa do nome cobre a base dos personagens. */
+.board{position:absolute;left:9%;top:31.4%;width:82%;height:14.4%;background:var(--cream);border:.6cqw solid var(--navy);border-radius:6cqw;box-shadow:0 1cqw 0 var(--navy)}
+.hello{left:16%;top:32.5%;width:68%;height:2.9%;font-size:3.8cqw;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+.name{left:12%;top:35.2%;width:76%;height:8.4%;font-size:13cqw;font-weight:700;line-height:1;color:var(--navy);text-wrap:balance}
+.age{left:29%;top:43.8%;width:42%;height:4.6%;font-size:5.2cqw;font-weight:700;line-height:1;white-space:nowrap;color:var(--navy);background:var(--orange);border:.6cqw solid var(--navy);border-radius:99cqw;box-shadow:0 .8cqw 0 var(--navy)}
 .age:empty::before{content:"Parabéns!"}
-.message{left:13%;top:36.2%;width:74%;height:9.6%;padding:1.4cqw 4cqw;font-size:4.5cqw;line-height:1.12;background:rgba(255,255,255,.92);border:.6cqw solid var(--navy);border-radius:5cqw;box-shadow:0 .8cqw 0 var(--navy)}
+.message{left:13%;top:50.8%;width:74%;height:8.2%;padding:1.2cqw 4cqw;font-size:4.3cqw;line-height:1.12;background:rgba(255,255,255,.92);border:.6cqw solid var(--navy);border-radius:5cqw;box-shadow:0 .8cqw 0 var(--navy)}
 .message:empty::before{content:"Vem brincar e comemorar com a gente! Vai ter muita diversão."}
 
-.tile{position:absolute;top:48.4%;width:24.6%;height:13.4%;display:flex;flex-direction:column;background:#fff;border:.6cqw solid var(--navy);border-radius:4.4cqw;box-shadow:0 .8cqw 0 var(--navy);overflow:hidden;color:var(--navy);text-decoration:none}
+.tile{position:absolute;top:61.2%;width:24.6%;height:12.4%;display:flex;flex-direction:column;background:#fff;border:.6cqw solid var(--navy);border-radius:4.4cqw;box-shadow:0 .8cqw 0 var(--navy);overflow:hidden;color:var(--navy);text-decoration:none}
 .tile b{flex:none;display:block;padding:.9cqw 0 .7cqw;font-size:3.2cqw;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center;border-bottom:.6cqw solid var(--navy)}
 .tile-date{left:10.1%}.tile-date b{background:var(--sky)}
 .tile-time{left:37.7%}.tile-time b{background:var(--yellow)}
@@ -41,8 +42,8 @@ body{margin:0;background:#3f7fc4;color:var(--navy);font-family:'Fredoka',ui-roun
 .btn{position:absolute;display:flex;align-items:center;justify-content:center;gap:2cqw;padding:0 3cqw;border:.6cqw solid var(--navy);border-radius:99cqw;font-family:inherit;font-weight:700;color:var(--navy);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .1s,box-shadow .1s,filter .15s}
 .btn:hover,.btn:focus-visible,.tile-place:hover,.tile-place:focus-visible{filter:brightness(1.06);outline:.7cqw solid #fff;outline-offset:.3cqw}
 .btn:active{transform:translateY(.6cqw);box-shadow:0 .3cqw 0 var(--navy)}
-.btn-rsvp{left:14%;top:65.4%;width:72%;height:7.2%;font-size:6cqw;background:var(--orange);box-shadow:0 1.1cqw 0 var(--navy)}
-.btn-gifts{left:23%;top:74.6%;width:54%;height:5%;font-size:4.1cqw;background:var(--cream);box-shadow:0 .9cqw 0 var(--navy)}
+.btn-rsvp{left:14%;top:75.6%;width:72%;height:6.8%;font-size:6cqw;background:var(--orange);box-shadow:0 1.1cqw 0 var(--navy)}
+.btn-gifts{left:23%;top:84%;width:54%;height:4.6%;font-size:4.1cqw;background:var(--cream);box-shadow:0 .9cqw 0 var(--navy)}
 .paw{width:1.1em;height:1.1em;flex:none;fill:currentColor}
 
 /* Janelas do sistema, no visual do tema. */
@@ -72,7 +73,8 @@ body{margin:0;background:#3f7fc4;color:var(--navy);font-family:'Fredoka',ui-roun
 <div class="stage">
 <img class="bg" src="{{art_url}}" alt="">
 <main class="card">
-  <img class="art" src="{{art_url}}" alt="Quintal ensolarado com balões, bandeirinhas e presentes">
+  <img class="art" src="{{art_url}}" alt="Bluey e Bingo comemorando em um quintal ensolarado, com balões e bandeirinhas">
+  <div class="board"></div>
   <p class="slot hello" data-fit>Você é meu convidado!</p>
   <h1 class="slot name" data-fit>{{child_name}}</h1>
   <p class="slot age" data-fit>{{age_label}}</p>
