@@ -11,7 +11,7 @@ import { Stepper } from "@/components/stepper";
 import { countdownLabel, daysUntil } from "@/lib/countdown";
 import { type Invitation } from "@/lib/invitation";
 import { formatDate, formatTime } from "@/lib/render";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getUserId } from "@/lib/supabase/server";
 
 type Rsvp = { id: string; guest_name: string; party_size: number };
 
@@ -28,7 +28,14 @@ function Stat({ icon, value, label }: { icon: IconName; value: string | number; 
 export default async function InvitationPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const supabase = await createClient();
-  const { data } = await supabase.from("invitations").select("*").eq("id", id).maybeSingle();
+  // O banco deixa qualquer conta ler convites publicados: esta tela é só do dono.
+  const userId = await getUserId(supabase);
+  const { data } = await supabase
+    .from("invitations")
+    .select("*")
+    .eq("id", id)
+    .eq("owner_id", userId)
+    .maybeSingle();
   const invitation = data as Invitation | null;
   if (!invitation) notFound();
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { removeClient } from "@/app/admin-actions";
+import { ConfirmButton } from "@/components/confirm-button";
 import { ClientForm } from "@/components/client-form";
 import { createClient } from "@/lib/supabase/server";
 
@@ -38,11 +39,16 @@ export default async function ClientsPage() {
                     {email.charAt(0)}
                   </span>
                   <span className="min-w-0 flex-1 font-medium break-words">{email}</span>
-                  <form action={removeClient.bind(null, email)}>
-                    <button className="min-h-11 cursor-pointer rounded-full px-3 text-sm font-semibold text-danger transition duration-200 hover:bg-danger/10">
-                      Remover
-                    </button>
-                  </form>
+                  <ConfirmButton
+                    action={removeClient.bind(null, email)}
+                    title={`Remover ${email}?`}
+                    description="A pessoa deixa de poder criar convites. Os convites que ela já criou continuam no ar."
+                    confirmLabel="Remover cliente"
+                    pendingLabel="Removendo…"
+                    className="min-h-11 cursor-pointer rounded-full px-3 text-sm font-semibold text-danger transition duration-200 hover:bg-danger/10"
+                  >
+                    Remover
+                  </ConfirmButton>
                 </li>
               ))}
             </ul>
