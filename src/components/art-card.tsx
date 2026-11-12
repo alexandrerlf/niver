@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -32,12 +33,13 @@ export function ArtCard({
         className="relative block aspect-[9/14] overflow-hidden rounded-3xl bg-sunken shadow-soft ring-1 ring-line transition duration-300 ease-soft hover:-translate-y-1 hover:shadow-lift"
       >
         {imageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          // A galeria pede uma miniatura do tamanho do cartão, não a arte original.
+          <Image
             src={imageUrl}
             alt=""
-            loading="lazy"
-            className="size-full object-cover object-top transition duration-700 ease-soft group-hover:scale-105"
+            fill
+            sizes="(min-width: 1024px) 240px, (min-width: 640px) 33vw, 50vw"
+            className="object-cover object-top transition duration-700 ease-soft group-hover:scale-105"
           />
         ) : (
           <div className="flex size-full items-center justify-center bg-linear-to-br from-sun/50 via-coral/30 to-coral/60">
