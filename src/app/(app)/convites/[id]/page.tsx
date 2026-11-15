@@ -8,9 +8,9 @@ import { DetailsForm } from "@/components/details-form";
 import { Icon, type IconName } from "@/components/icons";
 import { ShareLinks } from "@/components/share-links";
 import { Stepper } from "@/components/stepper";
-import { countdownLabel, daysUntil } from "@/lib/countdown";
+import { countdownLabel, daysUntil, isPast } from "@/lib/countdown";
 import { type Invitation } from "@/lib/invitation";
-import { formatDate, formatTime } from "@/lib/render";
+import { formatDate, formatDateShort, formatTime } from "@/lib/render";
 import { createClient, getUserId } from "@/lib/supabase/server";
 
 type Rsvp = { id: string; guest_name: string; party_size: number };
@@ -133,6 +133,13 @@ export default async function InvitationPage({ params }: { params: Promise<{ id:
 
               <div className="panel">
                 <h2 className="section-title">Presenças</h2>
+                {invitation.rsvp_deadline && (
+                  <p className="mt-1 text-sm font-semibold text-muted">
+                    {isPast(invitation.rsvp_deadline)
+                      ? `Confirmações encerradas em ${formatDateShort(invitation.rsvp_deadline)}.`
+                      : `Confirmações abertas até ${formatDateShort(invitation.rsvp_deadline)}.`}
+                  </p>
+                )}
                 {rsvps.length === 0 ? (
                   <p className="mt-1 text-muted">
                     Ninguém confirmou ainda. As respostas aparecem aqui assim que chegarem.

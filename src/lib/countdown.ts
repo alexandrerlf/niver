@@ -7,6 +7,12 @@ export function daysUntil(date: string | null, now = new Date()) {
   return Math.round((Date.parse(`${date}T00:00:00Z`) - Date.parse(`${today}T00:00:00Z`)) / DAY);
 }
 
+// O prazo vale até o fim do próprio dia.
+export function isPast(date: string | null, now = new Date()) {
+  const days = daysUntil(date, now);
+  return days !== null && days < 0;
+}
+
 export function countdownLabel(days: number | null) {
   if (days === null) return "";
   if (days < 0) return "Já aconteceu";

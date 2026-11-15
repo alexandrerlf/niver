@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { makeSlug, type PublicInvitation } from "@/lib/invitation";
+import { makeSlug, parseDetails, type PublicInvitation } from "@/lib/invitation";
 import {
   formatDate,
   formatDateShort,
@@ -28,6 +28,7 @@ const invitation: PublicInvitation = {
   age: 4,
   event_date: "2026-10-11",
   event_time: "18:30",
+  rsvp_deadline: null,
   location_name: "Condomínio Luar & Ponta Negra",
   maps_url: null,
   message: "$& Vamos juntos?",
@@ -162,5 +163,62 @@ describe("formatos", () => {
   it("cria slug sem acentos", () => {
     expect(makeSlug("João Müller!", 7, "x1y2")).toBe("joao-muller-7-anos-x1y2");
     expect(makeSlug("", null, "x1y2")).toBe("convite-x1y2");
+  });
+});
+
+describe("prazo de confirmação", () => {
+  const config = (deadline: string | null, now: Date) => {
+    const html = renderInvitation({ ...invitation, rsvp_deadline: deadline }, { ...options, now });
+    const json = html.match(/<script id="nv-config"[^>]*>(.*?)<\/script>/)?.[1] ?? "{}";
+    return JSON.parse(json) as { rsvpDeadline: string; rsvpClosed: boolean };
+  };
+
+  it("fica aberto até o fim do dia do prazo, no horário de Brasília", () => {
+    // 02:00 UTC do dia 6 ainda é dia 5 em Brasília.
+    expect(config("2026-10-05", new Date("2026-10-06T02:00:00Z"))).toMatchObject({
+      rsvpDeadline: "05/10/2026",
+      rsvpClosed: false,
+    });
+  });
+
+  it("encerra no dia seguinte ao prazo", () => {
+    expect(config("2026-10-05", new Date("2026-10-06T12:00:00Z")).rsvpClosed).toBe(true);
+  });
+
+  it("sem prazo, nunca encerra", () => {
+    expect(config(null, new Date("2030-01-01T12:00:00Z"))).toMatchObject({ rsvpDeadline: "", rsvpClosed: false });
+  });
+});
+
+describe("parseDetails", () => {
+  const form = (deadline: string) => {
+    const data = new FormData();
+    for (const [key, value] of Object.entries({
+      child_name: "Lia",
+      age: "6",
+      event_date: "2026-10-11",
+      event_time: "15:00",
+      location_name: "Buffet",
+      rsvp_deadline: deadline,
+    })) {
+      data.set(key, value);
+    }
+    return parseDetails(data);
+  };
+
+  it("aceita convite sem prazo de confirmação", () => {
+    const parsed = form("");
+    expect(parsed.success && parsed.data.rsvp_deadline).toBeNull();
+  });
+
+  it("aceita prazo até o dia da festa", () => {
+    const parsed = form("2026-10-11");
+    expect(parsed.success && parsed.data.rsvp_deadline).toBe("2026-10-11");
+  });
+
+  it("recusa prazo depois da festa", () => {
+    const parsed = form("2026-10-12");
+    expect(parsed.success).toBe(false);
+    expect(parsed.error?.issues[0]?.message).toBe("O prazo de confirmação precisa ser até o dia da festa.");
   });
 });

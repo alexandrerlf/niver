@@ -19,6 +19,7 @@ export type Invitation = {
   age: number | null;
   event_date: string | null;
   event_time: string | null;
+  rsvp_deadline: string | null;
   location_name: string;
   maps_url: string | null;
   message: string;
@@ -31,7 +32,7 @@ export type Invitation = {
 };
 
 export const PUBLIC_COLUMNS =
-  "id, slug, status, child_name, age, event_date, event_time, location_name, maps_url, message, gifts, image_path, html_template";
+  "id, slug, status, child_name, age, event_date, event_time, rsvp_deadline, location_name, maps_url, message, gifts, image_path, html_template";
 
 export type PublicInvitation = Pick<
   Invitation,
@@ -42,6 +43,7 @@ export type PublicInvitation = Pick<
   | "age"
   | "event_date"
   | "event_time"
+  | "rsvp_deadline"
   | "location_name"
   | "maps_url"
   | "message"
@@ -50,18 +52,27 @@ export type PublicInvitation = Pick<
   | "html_template"
 >;
 
-export const detailsSchema = z.object({
-  child_name: z.string().trim().min(1, "Informe o nome.").max(120),
-  age: z.coerce.number().int().min(0).max(120).nullable(),
-  event_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Informe a data."),
-  event_time: z.string().regex(/^[0-2]\d:[0-5]\d$/, "Informe o horário."),
-  location_name: z.string().trim().min(1, "Informe o local.").max(200),
-  maps_url: z
-    .union([z.literal(""), z.url({ protocol: /^https$/, error: "Use um link https." })])
-    .transform((value) => value || null),
-  message: z.string().trim().max(500),
-  gifts: z.array(z.string().trim().min(1).max(160)).max(20),
-});
+export const detailsSchema = z
+  .object({
+    child_name: z.string().trim().min(1, "Informe o nome.").max(120),
+    age: z.coerce.number().int().min(0).max(120).nullable(),
+    event_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Informe a data."),
+    event_time: z.string().regex(/^[0-2]\d:[0-5]\d$/, "Informe o horário."),
+    rsvp_deadline: z
+      .union([z.literal(""), z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Revise o prazo de confirmação.")])
+      .transform((value) => value || null),
+    location_name: z.string().trim().min(1, "Informe o local.").max(200),
+    maps_url: z
+      .union([z.literal(""), z.url({ protocol: /^https$/, error: "Use um link https." })])
+      .transform((value) => value || null),
+    message: z.string().trim().max(500),
+    gifts: z.array(z.string().trim().min(1).max(160)).max(20),
+  })
+  // As datas são AAAA-MM-DD, então a ordem alfabética é a ordem do calendário.
+  .refine((details) => !details.rsvp_deadline || details.rsvp_deadline <= details.event_date, {
+    message: "O prazo de confirmação precisa ser até o dia da festa.",
+    path: ["rsvp_deadline"],
+  });
 
 export type Details = z.infer<typeof detailsSchema>;
 
@@ -72,6 +83,7 @@ export function parseDetails(form: FormData) {
     age: age === "" ? null : age,
     event_date: form.get("event_date"),
     event_time: form.get("event_time"),
+    rsvp_deadline: String(form.get("rsvp_deadline") ?? "").trim(),
     location_name: form.get("location_name"),
     maps_url: String(form.get("maps_url") ?? "").trim(),
     message: form.get("message") ?? "",

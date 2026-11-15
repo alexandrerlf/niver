@@ -53,6 +53,7 @@ export function sampleInvitation(template: Pick<Template, "id" | "html" | "art_p
     age: 6,
     event_date: "2027-03-14",
     event_time: "16:30",
+    rsvp_deadline: null,
     location_name: "Salão Estrela, Ponta Negra",
     maps_url: null,
     message: "Venha celebrar esse dia especial com a gente!",

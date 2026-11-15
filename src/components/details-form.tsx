@@ -10,7 +10,7 @@ const initial: FormState = {};
 
 type Values = Pick<
   Invitation,
-  "child_name" | "age" | "event_date" | "event_time" | "location_name" | "maps_url" | "message" | "gifts"
+  "child_name" | "age" | "event_date" | "event_time" | "rsvp_deadline" | "location_name" | "maps_url" | "message" | "gifts"
 >;
 
 const EMPTY: Values = {
@@ -18,6 +18,7 @@ const EMPTY: Values = {
   age: null,
   event_date: null,
   event_time: null,
+  rsvp_deadline: null,
   location_name: "",
   maps_url: null,
   message: "",
@@ -138,6 +139,22 @@ export function DetailsForm({
             placeholder="https://maps.app.goo.gl/..."
             defaultValue={invitation.maps_url ?? ""}
           />
+        </div>
+        <div>
+          <label className="label" htmlFor="rsvp_deadline">
+            Confirmar presença até <span className="font-normal text-muted">(opcional)</span>
+          </label>
+          <input
+            className="field"
+            id="rsvp_deadline"
+            name="rsvp_deadline"
+            type="date"
+            aria-describedby="rsvp-deadline-hint"
+            defaultValue={invitation.rsvp_deadline ?? ""}
+          />
+          <p id="rsvp-deadline-hint" className="hint">
+            Depois desse dia, o convite não aceita novas confirmações.
+          </p>
         </div>
       </Group>
 
