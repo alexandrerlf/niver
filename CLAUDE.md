@@ -22,7 +22,7 @@ Next.js 16 (App Router, React 19), Tailwind 4, Supabase (Auth, Postgres com RLS,
 - `src/lib/render.ts`: monta o convite a partir do HTML do modelo, valida modelos (`templateProblems`) e define o CSP.
 - `src/proxy.ts`: renova a sessão e protege as rotas (no Next 16, `proxy.ts` substitui o `middleware.ts`).
 - `supabase/migrations/`: esquema e RLS. `templates/`: fontes dos modelos (arte e HTML).
-- `docs/documentacao/`: requisitos e regras de negócio. Leia antes de mudar o fluxo. `plano-de-produto.md` tem o que está planejado e as decisões em aberto.
+- `docs/documentacao/`: requisitos e regras de negócio. Leia antes de mudar o fluxo. `plano-de-produto.md` tem o que está planejado e as decisões em aberto. As especificações formais ficam em `openspec/`.
 
 ## Regras que não podem quebrar
 
@@ -46,3 +46,4 @@ Next.js 16 (App Router, React 19), Tailwind 4, Supabase (Auth, Postgres com RLS,
 - Mudança visual: confira no navegador em 390 px e 1280 px, nos temas claro e escuro.
 - Revisão de interface: skill `web-design-guidelines`. Telas novas: skill `frontend-design`.
 - Novo modelo de convite: skill `criar-modelo`.
+- Requisitos: especificações vivas em `openspec/specs/`, uma pasta por capacidade, no formato OpenSpec. Toda mudança de comportamento começa como proposta em `openspec/changes/` (skill `openspec-propose`), é implementada com `openspec-apply-change` e arquivada com `openspec-archive-change`. A linha de comando é `npx openspec` (por exemplo `npx openspec validate --all`); defina `OPENSPEC_TELEMETRY=0`.

@@ -39,6 +39,8 @@ Para a foto não quebrar o layout:
 - **3.4 Arquivamento.** Automático pela data. Depois do prazo, o link mostra uma página de convite encerrado.
 - **3.5 Histórico.** O convite arquivado continua na conta, com a prévia e a lista de presenças só para leitura, sem link público.
 
+A especificação formal está em `openspec/changes/cobranca-por-pix/` (proposta, requisitos com cenários e design).
+
 ### Decisões em aberto
 
 1. **Preço.**
