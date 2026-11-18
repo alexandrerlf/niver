@@ -1,3 +1,4 @@
+import { isPast } from "@/lib/countdown";
 import type { PublicInvitation } from "@/lib/invitation";
 
 const REQUIRED_TOKENS = ["{{art_url}}", "{{child_name}}", "{{event_time}}", "{{location_name}}"];
@@ -172,7 +173,7 @@ all('[data-action="maps"]').forEach(function(el){
 var gifts=all('[data-action="gifts"]');
 if(!c.gifts.length)gifts.forEach(function(el){el.hidden=true;el.style.display="none"});
 if(c.childName){
-  $("nv-rsvp-sub").textContent="Preencha e confirme para a família de "+c.childName+".";
+  $("nv-rsvp-sub").textContent="Preencha e confirme para a família de "+c.childName+"."+(c.rsvpDeadline?" Confirme até "+c.rsvpDeadline+".":"");
   $("nv-gifts-sub").textContent="Algumas ideias para o aniversário de "+c.childName+":";
 }
 c.gifts.forEach(function(gift){
@@ -183,6 +184,8 @@ c.gifts.forEach(function(gift){
   $("nv-gift-list").appendChild(li);
 });
 var say=function(text,kind){var status=$("nv-status");status.textContent=text;status.className="nv-status"+(kind?" nv-"+kind:"")};
+var closeRsvp=function(){$("nv-rsvp-fields").hidden=true;$("nv-send").hidden=true;$("nv-hint").hidden=true;$("nv-cancel").textContent="Fechar";$("nv-cancel").className="nv-btn nv-primary";say("As confirmações foram encerradas"+(c.rsvpDeadline?" em "+c.rsvpDeadline:"")+".")};
+if(c.rsvpClosed)closeRsvp();
 gifts.forEach(function(el){el.addEventListener("click",function(e){e.preventDefault();$("nv-gifts").showModal()})});
 all('[data-action="rsvp"]').forEach(function(el){el.addEventListener("click",function(e){e.preventDefault();if(!$("nv-rsvp-fields").hidden)say("");$("nv-rsvp").showModal();$("nv-name").focus()})});
 all("[data-nv-close]").forEach(function(el){el.addEventListener("click",function(){el.closest("dialog").close()})});
@@ -194,16 +197,23 @@ $("nv-send").addEventListener("click",function(){
   if(!c.rsvpUrl){say("Esta é uma prévia: a presença não foi enviada.","error");return}
   send.disabled=true;say("Enviando...");
   fetch(c.rsvpUrl,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:name,partySize:size})})
-    .then(function(res){if(!res.ok)throw new Error("rsvp");$("nv-rsvp-fields").hidden=true;send.hidden=true;$("nv-hint").hidden=true;$("nv-cancel").textContent="Fechar";$("nv-cancel").className="nv-btn nv-primary";say("Presença confirmada. Obrigado!","ok")})
+    .then(function(res){if(res.status===403){closeRsvp();return}if(!res.ok)throw new Error("rsvp");$("nv-rsvp-fields").hidden=true;send.hidden=true;$("nv-hint").hidden=true;$("nv-cancel").textContent="Fechar";$("nv-cancel").className="nv-btn nv-primary";say("Presença confirmada. Obrigado!","ok")})
     .catch(function(){send.disabled=false;say("Não foi possível enviar. Tente de novo.","error")});
 });
 })();`;
 
 export function renderInvitation(
   invitation: PublicInvitation,
-  options: { artUrl: string; appOrigin: string; pageUrl: string; nonce: string; preview?: boolean },
+  options: {
+    artUrl: string;
+    appOrigin: string;
+    pageUrl: string;
+    nonce: string;
+    preview?: boolean;
+    now?: Date;
+  },
 ) {
-  const { artUrl, appOrigin, pageUrl, nonce, preview } = options;
+  const { artUrl, appOrigin, pageUrl, nonce, preview, now } = options;
   const name = splitName(invitation.child_name);
   const values: Record<string, string> = {
     art_url: artUrl,
@@ -235,6 +245,8 @@ export function renderInvitation(
     origin: appOrigin,
     childName: invitation.child_name,
     rsvpUrl: preview ? null : `${appOrigin}/api/rsvp/${invitation.slug}`,
+    rsvpDeadline: formatDateShort(invitation.rsvp_deadline),
+    rsvpClosed: isPast(invitation.rsvp_deadline, now),
     mapsUrl: mapsHref(invitation),
     gifts: invitation.gifts,
   }).replace(/</g, "\\u003c");

@@ -45,11 +45,13 @@ O cliente pede um tema fora do app, por exemplo pelo WhatsApp. Um botão de pedi
 - **RF14.** Editar os dados depois de publicar, sem nova arte.
 - **RF16.** Compartilhar o link e acompanhar as presenças.
 - **RF19.** Excluir um convite, com confirmação, pela lista de convites ou pela tela dele. O link deixa de funcionar e as presenças são apagadas.
+- **RF20.** Definir um prazo opcional para confirmar presença, até o dia da festa.
 
 ### Convidado
 
 - **RF17.** Abrir o convite em `/c/<slug>` sem login.
 - **RF18.** Confirmar presença com nome e número de pessoas, abrir o mapa e ver os presentes.
+- **RF21.** Ver até quando pode confirmar presença e, depois do prazo, ver que as confirmações foram encerradas.
 
 ## Regras de negócio
 

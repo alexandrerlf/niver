@@ -16,6 +16,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check
+      - run: npm run specs
       - run: npm run build
         env:
           # O build não acessa o Supabase; só precisa de valores com formato válido.

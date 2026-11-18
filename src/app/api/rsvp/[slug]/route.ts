@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { isPast } from "@/lib/countdown";
 import { createGuestClient } from "@/lib/supabase/server";
 
 // O convite roda com origem opaca ("null"), então a rota precisa aceitar CORS.
@@ -28,12 +29,16 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
   const supabase = createGuestClient();
   const { data: invitation } = await supabase
     .from("invitations")
-    .select("id")
+    .select("id, rsvp_deadline")
     .eq("slug", slug)
     .eq("status", "published")
     .maybeSingle();
   if (!invitation) {
     return NextResponse.json({ error: "Convite não encontrado." }, { status: 404, headers: CORS });
+  }
+
+  if (isPast(invitation.rsvp_deadline)) {
+    return NextResponse.json({ error: "As confirmações foram encerradas." }, { status: 403, headers: CORS });
   }
 
   const { error } = await supabase.from("rsvps").insert({
