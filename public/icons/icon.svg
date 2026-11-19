@@ -1,10 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" fill="#e8552d"/>
-  <g transform="translate(106 96)">
-    <rect x="0" y="130" width="300" height="190" rx="22" fill="#fff6e9"/>
-    <path d="M0 152 150 40l150 112-150 92z" fill="#ffc94a"/>
-    <path d="M0 150v148a22 22 0 0 0 22 22h256a22 22 0 0 0 22-22V150L150 252z" fill="#fff6e9"/>
-    <circle cx="150" cy="124" r="42" fill="#e8552d"/>
-    <path d="M150 104l6 14 15 1-11 10 3 15-13-8-13 8 3-15-11-10 15-1z" fill="#fff6e9"/>
+  <!-- Ícone do app: o rosto do Nino. Área útil dentro do círculo central de 80% (ícone mascarável). -->
+  <rect width="512" height="512" fill="#c7401d"/>
+  <circle cx="420" cy="92" r="14" fill="#f6b93b"/>
+  <rect x="64" y="96" width="30" height="12" rx="5" fill="#f6b93b" transform="rotate(-25 79 102)"/>
+  <circle cx="96" cy="420" r="10" fill="#fff6e9" opacity=".7"/>
+  <g transform="translate(256 286)">
+    <rect x="-150" y="-92" width="300" height="200" rx="38" fill="#fffaf2" stroke="#3a2418" stroke-width="12"/>
+    <path d="M-140 92 L0 -2 L140 92" fill="none" stroke="#e9d3b8" stroke-width="9" stroke-linejoin="round"/>
+    <path d="M-144 -76 L0 -176 L144 -76 Z" fill="#f6b93b" stroke="#3a2418" stroke-width="12" stroke-linejoin="round"/>
+    <ellipse cx="-48" cy="-6" rx="20" ry="25" fill="#3a2418"/>
+    <ellipse cx="48" cy="-6" rx="20" ry="25" fill="#3a2418"/>
+    <circle cx="-41" cy="-15" r="7" fill="#fff"/><circle cx="55" cy="-15" r="7" fill="#fff"/>
+    <ellipse cx="-90" cy="36" rx="20" ry="12" fill="#f08a6c" opacity=".6"/>
+    <ellipse cx="90" cy="36" rx="20" ry="12" fill="#f08a6c" opacity=".6"/>
+    <path d="M-28 38 Q0 74 28 38 Z" fill="#c7401d" stroke="#3a2418" stroke-width="9" stroke-linejoin="round"/>
   </g>
 </svg>
