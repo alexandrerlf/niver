@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: "Crie convites de aniversário interativos.",
   applicationName: "Niver",
   appleWebApp: { capable: true, title: "Niver", statusBarStyle: "default" },
-  icons: { icon: "/icons/icon.svg", apple: "/icons/apple-touch-icon.png" },
+  icons: { icon: "/icons/icon-192.png", apple: "/icons/apple-touch-icon.png" },
 };
 
 export const viewport: Viewport = {

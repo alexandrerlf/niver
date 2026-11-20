@@ -1,4 +1,4 @@
-const CACHE = "niver-v2";
+const CACHE = "niver-v3";
 const SHELL = ["/offline", "/icons/icon-192.png", "/icons/icon-512.png"];
 
 self.addEventListener("install", (event) => {

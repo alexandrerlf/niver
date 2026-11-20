@@ -1,221 +1,201 @@
 import type { Metadata } from "next";
+import { Nunito_Sans } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon, type IconName } from "@/components/icons";
-import { Logo } from "@/components/logo";
+
+// Página de apresentação para visitantes sem login, com o mascote Leo.
+// Tem paleta e fonte próprias e não segue o tema escuro: as cores são fixas aqui.
+// A versão anterior, com o Nino, fica em /apresentacao/a.
+const nunito = Nunito_Sans({ subsets: ["latin"], weight: ["400", "600", "800", "900"] });
 
 export const metadata: Metadata = {
-  title: "Niver: convites de aniversário que os convidados respondem",
+  title: "Niver: convite de aniversário infantil do jeitinho que as crianças amam",
   description:
-    "Escolha um tema, preencha os dados da festa e mande o link pelo WhatsApp. Os convidados confirmam presença, abrem o mapa e veem as sugestões de presente.",
+    "Crie convites de aniversário interativos, escolha um tema e deixe os convidados confirmarem presença pelo próprio link.",
   openGraph: {
-    title: "Niver: convites de aniversário que os convidados respondem",
+    title: "Niver: convite de aniversário infantil do jeitinho que as crianças amam",
     description: "Convite com confirmação de presença, mapa e sugestões de presente num link só.",
-    images: [{ url: "/brand/og.png", width: 1200, height: 630 }],
+    images: [{ url: "/brand/b/og-leao.png", width: 1200, height: 630 }],
     locale: "pt_BR",
     type: "website",
   },
 };
 
-const STEPS = [
-  {
-    title: "Escolha o tema",
-    text: "Modelos desenhados para cada festa, prontos para receber o nome e a idade.",
-  },
-  {
-    title: "Preencha a festa",
-    text: "Data, horário, local, um recado e, se quiser, sugestões de presente e prazo para responder.",
-  },
-  {
-    title: "Mande o link",
-    text: "Um link só, que você envia pelo WhatsApp quantas vezes quiser.",
-  },
+const STEPS: { icon: IconName; title: string; text: string; tint: string }[] = [
+  { icon: "image", title: "Escolha um tema", text: "Escolha entre os temas exclusivos do nosso catálogo.", tint: "bg-[#ece4fb] text-[#6636c3]" },
+  { icon: "calendar", title: "Preencha os dados", text: "Informe data, horário, local e um recado para os convidados.", tint: "bg-[#fff3c8] text-[#b88a00]" },
+  { icon: "message", title: "Compartilhe", text: "Envie o link pelo WhatsApp e pronto.", tint: "bg-[#d6f4f1] text-[#0e8a82]" },
 ];
 
-const GUEST: { icon: IconName; title: string; text: string }[] = [
-  {
-    icon: "check",
-    title: "Confirma presença",
-    text: "Diz o nome e quantas pessoas vão, ali mesmo no convite. Sem baixar nada.",
-  },
-  {
-    icon: "pin",
-    title: "Chega sem se perder",
-    text: "Um toque no local abre o mapa com o endereço da festa.",
-  },
-  {
-    icon: "gift",
-    title: "Acerta no presente",
-    text: "Vê as sugestões que você deixou, como o tamanho da roupa ou o número do sapato.",
-  },
+const GUEST = [
+  "Confirma presença com o nome e quantas pessoas vão",
+  "Abre o mapa do local da festa",
+  "Vê as sugestões de presente",
 ];
 
-const RSVPS = [
-  { name: "Vovó Ana", people: 3 },
-  { name: "Família Souza", people: 4 },
-  { name: "Tio Bruno", people: 1 },
-];
-
-function StartLink({ className = "" }: { className?: string }) {
+function Cta({ className = "", tone = "purple" }: { className?: string; tone?: "purple" | "yellow" }) {
+  const colors =
+    tone === "purple"
+      ? "bg-[#6636c3] text-white hover:bg-[#5527b0] shadow-[0_10px_24px_-10px_rgb(102_54_195/0.7)]"
+      : "bg-[#ffd34e] text-[#291b43] hover:bg-[#ffc824] shadow-[0_10px_24px_-10px_rgb(0_0_0/0.4)]";
   return (
-    <Link href="/login" className={`button-primary ${className}`}>
+    <Link
+      href="/login"
+      className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-7 text-base font-extrabold transition duration-200 active:scale-[0.97] ${colors} ${className}`}
+    >
       Criar meu convite
       <Icon name="arrowRight" className="size-[18px]" />
     </Link>
   );
 }
 
+function Wordmark({ size = "text-3xl" }: { size?: string }) {
+  return (
+    <span className={`inline-flex items-center gap-2 font-black tracking-tight text-[#4a1fa3] ${size}`}>
+      <Image src="/brand/b/leao-cabeca.png" alt="" width={512} height={512} className="size-[1.7em]" />
+      Niver
+    </span>
+  );
+}
+
 export default function LandingPage() {
   return (
-    <div className="overflow-x-clip">
-      <header className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
-        <Logo />
-        <Link
-          href="/login"
-          className="inline-flex min-h-11 items-center rounded-full px-4 text-sm font-semibold text-ink transition duration-200 hover:bg-ink/5"
-        >
-          Entrar
-        </Link>
-      </header>
+    <div className={`${nunito.className} min-h-dvh overflow-x-clip bg-[#fbfaff] text-[#291b43]`}>
+      <div className="relative bg-[linear-gradient(180deg,#e9f4ff_0%,#d6ecff_55%,#c9ecc0_100%)]">
+        <svg aria-hidden="true" viewBox="0 0 1440 80" preserveAspectRatio="none" className="absolute inset-x-0 bottom-0 h-12 w-full sm:h-20">
+          <path d="M0 40 C240 90 480 0 720 30 C960 60 1200 10 1440 40 L1440 80 L0 80 Z" fill="#fbfaff" />
+        </svg>
 
-      <main>
-        <section className="mx-auto grid max-w-6xl items-center gap-12 px-4 pt-8 pb-20 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:gap-8 lg:pt-14 lg:pb-28">
-          <div className="animate-rise">
-            <h1 className="font-display text-5xl leading-[1.02] font-semibold text-balance sm:text-6xl lg:text-7xl">
-              O convite que os convidados respondem.
+        <header className="relative mx-auto flex h-20 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
+          <Wordmark size="text-2xl sm:text-3xl" />
+          <nav className="flex items-center gap-2">
+            <Link href="/login" className="inline-flex min-h-11 items-center rounded-full px-4 font-extrabold text-[#4a1fa3] hover:bg-white/60">
+              Entrar
+            </Link>
+            <span className="hidden sm:block">
+              <Cta />
+            </span>
+          </nav>
+        </header>
+
+        <section className="relative mx-auto grid max-w-6xl items-center gap-6 px-4 pt-4 pb-20 sm:px-6 lg:grid-cols-[1fr_1.1fr] lg:pb-28">
+          <div>
+            <h1 className="text-4xl leading-[1.05] font-black tracking-tight text-[#3d1a8f] text-balance sm:text-6xl">
+              Convite de aniversário infantil do jeitinho que as crianças amam!
             </h1>
-            <p className="mt-6 max-w-xl text-lg text-pretty text-muted sm:text-xl">
-              Escolha um tema, preencha os dados da festa e mande o link pelo WhatsApp. Quem recebe confirma
-              presença, abre o mapa e vê as sugestões de presente, tudo no próprio convite.
+            <p className="mt-5 max-w-lg text-lg font-semibold text-[#3b2f5c] sm:text-xl">
+              Crie convites interativos, escolha um tema e deixe os convidados confirmarem presença pelo próprio link.
             </p>
-            <div className="mt-9 flex flex-wrap items-center gap-3">
-              <StartLink />
-              <a href="#como-funciona" className="button-secondary">
-                Ver como funciona
-              </a>
-            </div>
+            <Cta className="mt-8" />
           </div>
 
-          <div className="relative mx-auto w-full max-w-[22rem] animate-rise [animation-delay:120ms] sm:max-w-sm">
-            <div className="phone max-w-none! rotate-2">
+          <div className="relative mx-auto flex w-full max-w-xl items-end justify-center">
+            <Image
+              src="/brand/b/leao-corpo.webp"
+              alt="Leo, o leãozinho festeiro do Niver, de braços abertos"
+              width={872}
+              height={1026}
+              priority
+              sizes="(min-width: 640px) 320px, 256px"
+              className="relative z-10 -mr-16 w-64 sm:w-80"
+            />
+            <div className="relative w-44 shrink-0 rotate-6 rounded-[2rem] bg-[#1d1630] p-1.5 shadow-[0_30px_60px_-24px_rgb(41_27_67/0.6)] sm:w-56">
               <Image
                 src="/brand/convite-exemplo.webp"
-                alt="Exemplo de convite de aniversário da Helena, 6 anos, com data, horário, local e botão de confirmar presença"
+                alt="Exemplo de convite de aniversário da Helena, 6 anos"
                 width={940}
                 height={1672}
-                priority
-                sizes="(min-width: 640px) 384px, 352px"
+                sizes="224px"
+                className="aspect-[9/16] w-full rounded-[1.6rem] object-cover"
               />
             </div>
-            <Image
-              src="/brand/mascote.svg"
-              alt=""
-              width={400}
-              height={420}
-              className="absolute -bottom-10 -left-14 w-36 -rotate-6 drop-shadow-xl sm:-left-20 sm:w-44"
-            />
-            <div className="absolute top-16 -right-3 flex items-center gap-3 rounded-2xl border border-line bg-card py-2.5 pr-4 pl-2.5 shadow-lift sm:-right-12">
-              <span className="flex size-9 items-center justify-center rounded-full bg-leaf/15 text-leaf">
-                <Icon name="check" className="size-[18px]" />
-              </span>
-              <span className="text-sm leading-tight">
-                <span className="block font-bold">Vovó Ana confirmou</span>
-                <span className="block text-muted">3 pessoas</span>
-              </span>
-            </div>
           </div>
         </section>
+      </div>
 
-        <section id="como-funciona" className="scroll-mt-8 border-y border-line bg-card/60">
-          <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-24">
-            <h2 className="max-w-2xl font-display text-4xl leading-tight font-semibold text-balance sm:text-5xl">
-              Pronto em três passos, do celular.
-            </h2>
-            <ol className="mt-12 grid gap-10 sm:grid-cols-3 sm:gap-8">
-              {STEPS.map((step, index) => (
-                <li key={step.title}>
-                  <span className="font-display text-6xl leading-none font-semibold text-coral">{index + 1}</span>
-                  <h3 className="mt-4 text-xl font-bold">{step.title}</h3>
-                  <p className="mt-2 text-muted">{step.text}</p>
-                </li>
-              ))}
-            </ol>
-          </div>
+      <main>
+        <section className="mx-auto max-w-6xl px-4 py-16 text-center sm:px-6">
+          <h2 className="text-3xl font-black text-[#3d1a8f] sm:text-4xl">Como funciona?</h2>
+          <p className="mt-2 text-lg font-semibold text-[#5b4d80]">Em 3 passos, o convite fica pronto:</p>
+          <ol className="mt-10 grid gap-4 text-left sm:grid-cols-3">
+            {STEPS.map((step, index) => (
+              <li key={step.title} className="flex gap-4 rounded-3xl bg-white p-5 shadow-[0_8px_30px_-16px_rgb(41_27_67/0.25)]">
+                <span className={`flex size-16 shrink-0 items-center justify-center rounded-2xl ${step.tint}`}>
+                  <Icon name={step.icon} className="size-8" />
+                </span>
+                <span>
+                  <span className="flex items-center gap-2 text-lg font-black">
+                    <span className="flex size-7 items-center justify-center rounded-full bg-[#6636c3] text-sm text-white">{index + 1}</span>
+                    {step.title}
+                  </span>
+                  <span className="mt-1 block text-[#5b4d80]">{step.text}</span>
+                </span>
+              </li>
+            ))}
+          </ol>
         </section>
 
-        <section className="mx-auto grid max-w-6xl items-center gap-14 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:py-28">
-          <div>
-            <h2 className="font-display text-4xl leading-tight font-semibold text-balance sm:text-5xl">
-              Para quem recebe, é só tocar.
-            </h2>
-            <ul className="mt-10 space-y-7">
-              {GUEST.map((item) => (
-                <li key={item.title} className="flex gap-4">
-                  <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-coral/10 text-coral">
-                    <Icon name={item.icon} className="size-6" />
+        <section className="mx-auto grid max-w-6xl gap-5 px-4 pb-16 sm:px-6 lg:grid-cols-2">
+          <div className="rounded-3xl bg-[#f1ecfc] p-6 sm:p-8">
+            <h2 className="text-2xl font-black text-[#3d1a8f] sm:text-3xl">E o convidado, o que faz?</h2>
+            <p className="mt-1 text-lg font-semibold text-[#5b4d80]">É simples e rápido!</p>
+            <ul className="mt-6 space-y-4">
+              {GUEST.map((text) => (
+                <li key={text} className="flex items-start gap-3 text-lg">
+                  <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-[#16b8ad] text-white">
+                    <Icon name="check" className="size-4" />
                   </span>
-                  <span>
-                    <span className="block text-lg font-bold">{item.title}</span>
-                    <span className="mt-1 block text-muted">{item.text}</span>
-                  </span>
+                  {text}
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="panel mx-auto w-full max-w-md">
-            <p className="text-sm font-semibold text-muted">Aniversário da Helena</p>
-            <p className="mt-1 font-display text-3xl font-semibold">8 pessoas confirmadas</p>
-            <p className="mt-1 text-sm text-muted">Confirmações abertas até 07/03.</p>
-            <ul className="mt-5 divide-y divide-line">
-              {RSVPS.map((rsvp) => (
-                <li key={rsvp.name} className="flex items-center gap-3 py-3">
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-coral/10 font-bold text-coral">
-                    {rsvp.name.charAt(0)}
-                  </span>
-                  <span className="min-w-0 flex-1 font-medium">{rsvp.name}</span>
-                  <span className="badge bg-sunken text-muted">
-                    {rsvp.people} {rsvp.people === 1 ? "pessoa" : "pessoas"}
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-4 text-sm text-muted">Você acompanha quem vem, em tempo real, pelo app.</p>
-          </div>
-        </section>
-
-        <section className="px-4 pb-24 sm:px-6">
-          <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-[#1a1310] px-6 py-14 text-white sm:px-14 sm:py-16">
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 bg-[radial-gradient(36rem_24rem_at_90%_10%,rgb(232_85_45/0.45),transparent_65%),radial-gradient(30rem_22rem_at_0%_100%,rgb(246_185_59/0.25),transparent_65%)]"
-            />
-            <div className="relative grid items-center gap-10 md:grid-cols-[1fr_auto]">
-              <div>
-                <h2 className="font-display text-4xl leading-tight font-semibold text-balance sm:text-5xl">
-                  O Nino já está de chapéu. E a sua festa?
-                </h2>
-                <p className="mt-4 max-w-lg text-lg text-white/75">
-                  Crie a conta, escolha o tema e veja a prévia do convite antes de enviar para alguém.
-                </p>
-                <StartLink className="mt-8" />
+          <div className="rounded-3xl bg-[#f1ecfc] p-6 sm:p-8">
+            <h2 className="text-2xl font-black text-[#3d1a8f] sm:text-3xl">Acompanhe as confirmações</h2>
+            <p className="mt-1 text-lg font-semibold text-[#5b4d80]">Veja quem confirmou e quantas pessoas vêm, direto no app.</p>
+            <div className="mt-6 grid grid-cols-2 divide-x divide-[#e6def8] rounded-2xl bg-white p-5 shadow-[0_8px_30px_-16px_rgb(41_27_67/0.25)]">
+              <div className="flex items-center gap-3 pr-4">
+                <span className="flex size-12 items-center justify-center rounded-2xl bg-[#ece4fb] text-[#6636c3]">
+                  <Icon name="users" className="size-6" />
+                </span>
+                <span>
+                  <span className="block text-3xl font-black">12</span>
+                  <span className="text-sm text-[#5b4d80]">Confirmados</span>
+                </span>
               </div>
-              <Image
-                src="/brand/mascote.svg"
-                alt="Nino, o envelope festeiro do Niver"
-                width={400}
-                height={420}
-                className="mx-auto w-48 sm:w-56"
-              />
+              <div className="flex items-center gap-3 pl-4">
+                <span className="flex size-12 items-center justify-center rounded-2xl bg-[#d6f4f1] text-[#0e8a82]">
+                  <Icon name="users" className="size-6" />
+                </span>
+                <span>
+                  <span className="block text-3xl font-black">28</span>
+                  <span className="text-sm text-[#5b4d80]">Total de pessoas</span>
+                </span>
+              </div>
             </div>
+          </div>
+        </section>
+
+        <section className="px-4 pb-16 sm:px-6">
+          <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-6 rounded-[2rem] bg-[#4a1fa3] px-6 pt-4 pb-10 text-center text-white sm:flex-row sm:pr-10 sm:pb-4 sm:text-left">
+            <Image src="/brand/b/leao-presente.webp" alt="" width={454} height={448} sizes="192px" className="-mt-14 w-40 sm:-mb-4 sm:w-48" />
+            <div className="flex-1">
+              <h2 className="text-2xl font-black sm:text-3xl">Deixe a festa ainda mais especial!</h2>
+              <p className="mt-1 text-white/85">Crie o convite agora e comece a alegria antes mesmo da festa.</p>
+            </div>
+            <Cta tone="yellow" />
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-line">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-8 text-sm text-muted sm:px-6">
-          <Logo className="text-lg" />
-          <p>Convites de aniversário interativos.</p>
+      <footer className="border-t border-[#ece6fa]">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-8 sm:px-6">
+          <Wordmark size="text-xl" />
+          <Link href="/login" className="font-extrabold text-[#4a1fa3]">
+            Entrar
+          </Link>
         </div>
       </footer>
     </div>

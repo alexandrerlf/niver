@@ -1,6 +1,6 @@
-# Variante B da página de apresentação
+# Identidade com o Leo (antiga variante B)
 
-Proposta feita por outra IA para comparar com a apresentação atual (variante A) num teste A/B. A página fica em `/apresentacao/b`, fora dos buscadores, e ainda não recebe visitas sozinha: a divisão de tráfego é um passo separado.
+Proposta feita por outra IA e escolhida pelo dono do projeto. É a página de apresentação em `/apresentacao` (o que o visitante sem login vê em `/`), e o Leo é o ícone do app e a marca no topo das telas. A versão anterior, com o mascote Nino, fica em `/apresentacao/a`, fora dos buscadores.
 
 ## Conceito
 
@@ -15,9 +15,10 @@ Leãozinho festeiro, de braços abertos, com chapéu de aniversário azul com es
 | `public/brand/b/leao-corpo.webp` | Corpo inteiro, na abertura |
 | `public/brand/b/leao-presente.webp` | Leo segurando um presente, na chamada final |
 | `public/brand/b/leao-cabeca.png` | Cabeça com chapéu, ao lado do nome Niver |
-| `public/brand/b/icone-leao-192.png`, `-512.png` | Ícone do app, se a variante B vencer |
+| `public/brand/b/icone-leao-192.png`, `-512.png` | Base do ícone do app em `public/icons/` |
+| `public/brand/b/og-leao.png` | Imagem de compartilhamento do link do site |
 
-As imagens vêm de uma figura de baixa resolução (o leão tem cerca de 460 px de altura no original). Se a variante B vencer, vale pedir à outra IA o leão em alta resolução com fundo transparente, ou um arquivo vetorial, antes de usar em peças maiores.
+As imagens vêm de uma figura de baixa resolução (o leão tem cerca de 460 px de altura no original). Vale pedir à outra IA o leão em alta resolução com fundo transparente, ou um arquivo vetorial, antes de usar em peças maiores.
 
 ## Paleta
 
