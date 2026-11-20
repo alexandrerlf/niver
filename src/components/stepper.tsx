@@ -17,7 +17,7 @@ export function Stepper({ current }: { current: 0 | 1 | 2 }) {
             <span
               className={`flex size-6 items-center justify-center rounded-full text-xs ${
                 active
-                  ? "bg-coral text-on-coral"
+                  ? "bg-brand text-on-brand"
                   : done
                     ? "bg-leaf/15 text-leaf"
                     : "bg-sunken text-muted"

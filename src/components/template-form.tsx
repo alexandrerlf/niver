@@ -53,7 +53,7 @@ export function TemplateForm({ template, emails }: { template: Template; emails:
           {AUDIENCES.map((audience) => (
             <label
               key={audience.value}
-              className="flex cursor-pointer items-start gap-3 rounded-2xl border border-line bg-card p-4 transition duration-200 hover:border-ink/20 has-checked:border-coral has-checked:bg-coral/5 has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-coral"
+              className="flex cursor-pointer items-start gap-3 rounded-2xl border border-line bg-card p-4 transition duration-200 hover:border-ink/20 has-checked:border-brand has-checked:bg-brand/5 has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-brand"
             >
               <input
                 type="radio"
@@ -63,7 +63,7 @@ export function TemplateForm({ template, emails }: { template: Template; emails:
                 onChange={() => setVisibility(audience.value)}
                 className="peer sr-only"
               />
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-sunken text-muted transition duration-200 peer-checked:bg-coral peer-checked:text-on-coral">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-sunken text-muted transition duration-200 peer-checked:bg-brand peer-checked:text-on-brand">
                 <Icon name={audience.icon} className="size-[18px]" />
               </span>
               <span>

@@ -43,30 +43,30 @@ function MockInvitation({ name, line, when, className }: (typeof CARDS)[number])
 
 export function LoginShowcase() {
   return (
-    <aside className="relative hidden overflow-hidden rounded-[2.5rem] bg-[#1a1310] p-12 text-white lg:flex lg:flex-col lg:justify-between">
+    <aside className="relative hidden overflow-hidden rounded-[2.5rem] bg-[#3d1a8f] p-12 text-white lg:flex lg:flex-col lg:justify-between">
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[radial-gradient(40rem_28rem_at_85%_0%,rgb(232_85_45/0.45),transparent_65%),radial-gradient(34rem_26rem_at_0%_100%,rgb(246_185_59/0.28),transparent_65%)]"
+        className="absolute inset-0 bg-[radial-gradient(40rem_28rem_at_85%_0%,rgb(102_54_195/0.6),transparent_65%),radial-gradient(34rem_26rem_at_0%_100%,rgb(22_184_173/0.3),transparent_65%)]"
       />
 
       <div aria-hidden="true" className="relative mx-auto mt-6 aspect-[10/9] w-full max-w-md">
         {CARDS.map((card) => (
           <MockInvitation key={card.name} {...card} />
         ))}
-        <div className="absolute -right-2 bottom-2 z-20 flex animate-float items-center gap-3 rounded-2xl bg-white/95 py-2.5 pr-4 pl-2.5 text-[#1f1611] shadow-[0_20px_40px_-12px_rgb(0_0_0/0.6)] [animation-delay:-1s]">
+        <div className="absolute -right-2 bottom-2 z-20 flex animate-float items-center gap-3 rounded-2xl bg-white/95 py-2.5 pr-4 pl-2.5 text-[#291b43] shadow-[0_20px_40px_-12px_rgb(0_0_0/0.6)] [animation-delay:-1s]">
           <span className="flex size-9 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
             <Icon name="check" className="size-[18px]" />
           </span>
           <span className="text-sm leading-tight">
             <span className="block font-bold">Vovó Ana confirmou</span>
-            <span className="block text-[#6b5d53]">3 pessoas</span>
+            <span className="block text-[#5b4d80]">3 pessoas</span>
           </span>
         </div>
       </div>
 
       <div className="relative">
         <p className="font-display text-4xl leading-[1.1] font-semibold text-balance xl:text-5xl">
-          Do modelo ao <em className="text-[#ffb08f]">“eu vou!”</em> em poucos minutos.
+          Do modelo ao <em className="text-[#ffd34e]">“eu vou!”</em> em poucos minutos.
         </p>
         <ul className="mt-8 grid gap-3 text-white/80">
           {[
@@ -75,7 +75,7 @@ export function LoginShowcase() {
             ["users", "Lista de presenças atualizada na hora"],
           ].map(([icon, text]) => (
             <li key={text} className="flex items-center gap-3">
-              <span className="flex size-8 items-center justify-center rounded-full bg-white/10 text-[#ffb08f]">
+              <span className="flex size-8 items-center justify-center rounded-full bg-white/10 text-[#ffd34e]">
                 <Icon name={icon as "sparkles"} className="size-4" />
               </span>
               {text}

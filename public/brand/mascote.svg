@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 420" role="img" aria-labelledby="t">
+  <title id="t">Nino, o envelope festeiro do Niver</title>
+  <defs>
+    <linearGradient id="corpo" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fffaf2"/>
+      <stop offset="1" stop-color="#f6e7d3"/>
+    </linearGradient>
+  </defs>
+  <!-- sombra -->
+  <ellipse cx="200" cy="398" rx="122" ry="14" fill="#1f1611" opacity=".12"/>
+  <!-- braços -->
+  <g stroke="#3a2418" stroke-width="9" stroke-linecap="round" fill="none">
+    <path d="M78 250 Q40 220 34 172"/>
+    <path d="M322 250 Q362 236 374 196"/>
+  </g>
+  <circle cx="34" cy="166" r="15" fill="#fffaf2" stroke="#3a2418" stroke-width="7"/>
+  <circle cx="375" cy="190" r="15" fill="#fffaf2" stroke="#3a2418" stroke-width="7"/>
+  <!-- pernas -->
+  <g stroke="#3a2418" stroke-width="9" stroke-linecap="round">
+    <path d="M160 352 L154 384"/><path d="M240 352 L246 384"/>
+  </g>
+  <g fill="#c7401d" stroke="#3a2418" stroke-width="6" stroke-linejoin="round">
+    <path d="M130 384 h34 a10 10 0 0 1 0 14 h-38 a8 8 0 0 1 4 -14z"/>
+    <path d="M236 384 h34 a8 8 0 0 1 4 14 h-38 a10 10 0 0 1 0 -14z"/>
+  </g>
+  <!-- corpo do envelope -->
+  <rect x="70" y="150" width="260" height="210" rx="34" fill="url(#corpo)" stroke="#3a2418" stroke-width="9"/>
+  <!-- dobras de baixo -->
+  <path d="M84 344 L200 262 L316 344" fill="none" stroke="#e9d3b8" stroke-width="7" stroke-linejoin="round"/>
+  <!-- aba aberta -->
+  <path d="M76 166 L200 60 L324 166 Z" fill="#c7401d" stroke="#3a2418" stroke-width="9" stroke-linejoin="round"/>
+  <path d="M110 160 L200 84 L290 160" fill="none" stroke="#e8653f" stroke-width="7" stroke-linejoin="round" opacity=".8"/>
+  <!-- convite saindo -->
+  <rect x="128" y="112" width="144" height="64" rx="10" fill="#fff" stroke="#3a2418" stroke-width="7" transform="rotate(-6 200 144)"/>
+  <g transform="rotate(-6 200 144)" fill="#f6b93b">
+    <circle cx="160" cy="138" r="7"/><circle cx="184" cy="132" r="5" fill="#c7401d"/><circle cx="240" cy="140" r="6" fill="#4f8fd6"/>
+  </g>
+  <!-- chapéu de festa -->
+  <g transform="rotate(14 286 70)">
+    <path d="M254 98 L290 6 L326 98 Z" fill="#f6b93b" stroke="#3a2418" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M270 58 L310 58 M262 80 L318 80" stroke="#c7401d" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="290" cy="6" r="13" fill="#4f8fd6" stroke="#3a2418" stroke-width="6"/>
+  </g>
+  <!-- rosto -->
+  <g>
+    <ellipse cx="160" cy="232" rx="17" ry="21" fill="#3a2418"/>
+    <ellipse cx="240" cy="232" rx="17" ry="21" fill="#3a2418"/>
+    <circle cx="166" cy="224" r="6" fill="#fff"/><circle cx="246" cy="224" r="6" fill="#fff"/>
+    <ellipse cx="128" cy="268" rx="18" ry="11" fill="#f08a6c" opacity=".55"/>
+    <ellipse cx="272" cy="268" rx="18" ry="11" fill="#f08a6c" opacity=".55"/>
+    <path d="M176 270 Q200 300 224 270 Z" fill="#c7401d" stroke="#3a2418" stroke-width="7" stroke-linejoin="round"/>
+  </g>
+  <!-- confetes -->
+  <g>
+    <rect x="22" y="70" width="18" height="8" rx="3" fill="#f6b93b" transform="rotate(-25 31 74)"/>
+    <rect x="356" y="96" width="18" height="8" rx="3" fill="#c7401d" transform="rotate(30 365 100)"/>
+    <circle cx="64" cy="112" r="6" fill="#4f8fd6"/>
+    <circle cx="352" cy="300" r="6" fill="#f6b93b"/>
+    <rect x="30" y="310" width="16" height="7" rx="3" fill="#4f8fd6" transform="rotate(20 38 313)"/>
+  </g>
+</svg>

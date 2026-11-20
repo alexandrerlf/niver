@@ -39,7 +39,7 @@ export function ShareLinks({ url, name }: { url: string; name: string }) {
           type="button"
           onClick={copy}
           className={`inline-flex min-h-10 shrink-0 cursor-pointer items-center gap-1.5 rounded-xl px-3 text-sm font-semibold transition duration-200 ${
-            copied ? "bg-leaf/15 text-leaf" : "bg-card text-ink shadow-soft hover:text-coral"
+            copied ? "bg-leaf/15 text-leaf" : "bg-card text-ink shadow-soft hover:text-brand"
           }`}
         >
           <Icon name={copied ? "check" : "copy"} className="size-4" />

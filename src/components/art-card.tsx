@@ -42,7 +42,7 @@ export function ArtCard({
             className="object-cover object-top transition duration-700 ease-soft group-hover:scale-105"
           />
         ) : (
-          <div className="flex size-full items-center justify-center bg-linear-to-br from-sun/50 via-coral/30 to-coral/60">
+          <div className="flex size-full items-center justify-center bg-linear-to-br from-sun/50 via-brand/30 to-brand/60">
             <span className="font-display text-7xl font-semibold text-white/80">
               {title.trim().charAt(0).toUpperCase() || "?"}
             </span>
@@ -77,7 +77,7 @@ export function EmptyState({
 }) {
   return (
     <div className="panel flex animate-rise flex-col items-center px-6 py-14 text-center">
-      <span className="mb-5 flex size-16 items-center justify-center rounded-3xl bg-coral/10 text-coral">
+      <span className="mb-5 flex size-16 items-center justify-center rounded-3xl bg-brand/10 text-brand">
         {icon}
       </span>
       <p className="section-title">{title}</p>
