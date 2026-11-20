@@ -8,15 +8,16 @@ Celebração organizada: a energia de uma festa infantil com uma interface fáci
 
 ## Mascote: Leo
 
-Leãozinho festeiro, de braços abertos, com chapéu de aniversário azul com estrela e camiseta roxa com estrela amarela. Desenho original, redesenhado em vetor a partir da imagem da proposta.
+Leãozinho festeiro, de braços abertos, com chapéu de aniversário azul com estrela e camiseta roxa com estrela amarela. As imagens são recortes da arte original da proposta, com o fundo removido por segmentação e ampliadas 2x.
 
 | Arquivo | Uso |
 |---|---|
-| `public/brand/b/mascote-leao.svg` e `.png` | Corpo inteiro, na abertura e na chamada final |
-| `public/brand/b/leao-cabeca.svg` | Cabeça com chapéu, ao lado do nome Niver |
-| `public/brand/b/icone-leao.svg`, `-192.png`, `-512.png` | Ícone do app, se a variante B vencer |
+| `public/brand/b/leao-corpo.webp` | Corpo inteiro, na abertura |
+| `public/brand/b/leao-presente.webp` | Leo segurando um presente, na chamada final |
+| `public/brand/b/leao-cabeca.png` | Cabeça com chapéu, ao lado do nome Niver |
+| `public/brand/b/icone-leao-192.png`, `-512.png` | Ícone do app, se a variante B vencer |
 
-Para alterar o desenho, edite `scripts/desenhar-leao.py` e rode `python3 scripts/desenhar-leao.py public/brand/b`.
+As imagens vêm de uma figura de baixa resolução (o leão tem cerca de 460 px de altura no original). Se a variante B vencer, vale pedir à outra IA o leão em alta resolução com fundo transparente, ou um arquivo vetorial, antes de usar em peças maiores.
 
 ## Paleta
 

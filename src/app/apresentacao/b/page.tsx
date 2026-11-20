@@ -46,7 +46,7 @@ function Cta({ className = "", tone = "purple" }: { className?: string; tone?: "
 function Wordmark({ size = "text-3xl" }: { size?: string }) {
   return (
     <span className={`inline-flex items-center gap-2 font-black tracking-tight text-[#4a1fa3] ${size}`}>
-      <Image src="/brand/b/leao-cabeca.svg" alt="" width={300} height={300} className="size-[1.6em]" />
+      <Image src="/brand/b/leao-cabeca.png" alt="" width={512} height={512} className="size-[1.7em]" />
       Niver
     </span>
   );
@@ -85,11 +85,12 @@ export default function LandingB() {
 
           <div className="relative mx-auto flex w-full max-w-xl items-end justify-center">
             <Image
-              src="/brand/b/mascote-leao.svg"
+              src="/brand/b/leao-corpo.webp"
               alt="Leo, o leãozinho festeiro do Niver, de braços abertos"
-              width={500}
-              height={500}
+              width={872}
+              height={1026}
               priority
+              sizes="(min-width: 640px) 320px, 256px"
               className="relative z-10 -mr-16 w-64 sm:w-80"
             />
             <div className="relative w-44 shrink-0 rotate-6 rounded-[2rem] bg-[#1d1630] p-1.5 shadow-[0_30px_60px_-24px_rgb(41_27_67/0.6)] sm:w-56">
@@ -172,7 +173,7 @@ export default function LandingB() {
 
         <section className="px-4 pb-16 sm:px-6">
           <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-6 rounded-[2rem] bg-[#4a1fa3] px-6 pt-4 pb-10 text-center text-white sm:flex-row sm:pr-10 sm:pb-4 sm:text-left">
-            <Image src="/brand/b/mascote-leao.svg" alt="" width={500} height={500} className="-mt-14 w-40 sm:-mb-6 sm:w-48" />
+            <Image src="/brand/b/leao-presente.webp" alt="" width={454} height={448} sizes="192px" className="-mt-14 w-40 sm:-mb-4 sm:w-48" />
             <div className="flex-1">
               <h2 className="text-2xl font-black sm:text-3xl">Deixe a festa ainda mais especial!</h2>
               <p className="mt-1 text-white/85">Crie o convite agora e comece a alegria antes mesmo da festa.</p>
