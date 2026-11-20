@@ -40,6 +40,14 @@
       translate: 0 -10px;
     }
   }
+  @keyframes demo-progress {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
   @keyframes shimmer {
     to {
       background-position: -200% 0;

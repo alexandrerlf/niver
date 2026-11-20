@@ -32,7 +32,7 @@ export async function signInWithPassword(_: FormState, form: FormData): Promise<
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword(credentials(form));
   if (error) return { error: "E-mail ou senha incorretos, ou e-mail ainda não confirmado." };
-  redirect("/");
+  redirect("/convites");
 }
 
 export async function signUp(_: FormState, form: FormData): Promise<FormState> {
@@ -154,6 +154,6 @@ export async function deleteInvitation(id: string) {
   await supabase.from("invitations").delete().eq("id", id);
   await removeOwnArt(supabase, ownerId, data?.image_path);
 
-  revalidatePath("/");
-  redirect("/");
+  revalidatePath("/convites");
+  redirect("/convites");
 }

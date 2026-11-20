@@ -19,7 +19,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     <>
       <header className="sticky top-0 z-30 border-b border-line/70 bg-paper/75 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-3 px-4 sm:px-6">
-          <Link href="/" aria-label="Niver, início" className="rounded-xl">
+          <Link href="/convites" aria-label="Niver, seus convites" className="rounded-xl">
             <Logo />
           </Link>
           {admin && <TopNav />}
