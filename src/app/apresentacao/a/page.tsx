@@ -136,7 +136,7 @@ export default function LandingPage() {
             <ol className="mt-12 grid gap-10 sm:grid-cols-3 sm:gap-8">
               {STEPS.map((step, index) => (
                 <li key={step.title}>
-                  <span className="font-display text-6xl leading-none font-semibold text-coral">{index + 1}</span>
+                  <span className="font-display text-6xl leading-none font-semibold text-brand">{index + 1}</span>
                   <h3 className="mt-4 text-xl font-bold">{step.title}</h3>
                   <p className="mt-2 text-muted">{step.text}</p>
                 </li>
@@ -153,7 +153,7 @@ export default function LandingPage() {
             <ul className="mt-10 space-y-7">
               {GUEST.map((item) => (
                 <li key={item.title} className="flex gap-4">
-                  <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-coral/10 text-coral">
+                  <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-brand/10 text-brand">
                     <Icon name={item.icon} className="size-6" />
                   </span>
                   <span>
@@ -172,7 +172,7 @@ export default function LandingPage() {
             <ul className="mt-5 divide-y divide-line">
               {RSVPS.map((rsvp) => (
                 <li key={rsvp.name} className="flex items-center gap-3 py-3">
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-coral/10 font-bold text-coral">
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand/10 font-bold text-brand">
                     {rsvp.name.charAt(0)}
                   </span>
                   <span className="min-w-0 flex-1 font-medium">{rsvp.name}</span>

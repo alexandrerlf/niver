@@ -18,7 +18,7 @@ type Rsvp = { id: string; guest_name: string; party_size: number };
 function Stat({ icon, value, label }: { icon: IconName; value: string | number; label: string }) {
   return (
     <div className="rounded-3xl border border-line bg-card p-4 shadow-soft sm:p-5">
-      <Icon name={icon} className="size-5 text-coral" />
+      <Icon name={icon} className="size-5 text-brand" />
       <p className="mt-3 font-display text-3xl leading-none font-semibold sm:text-4xl">{value}</p>
       <p className="mt-1.5 text-sm text-muted">{label}</p>
     </div>
@@ -148,7 +148,7 @@ export default async function InvitationPage({ params }: { params: Promise<{ id:
                   <ul className="mt-3 divide-y divide-line">
                     {rsvps.map((rsvp) => (
                       <li key={rsvp.id} className="flex items-center gap-3 py-3">
-                        <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-coral/10 font-bold text-coral uppercase">
+                        <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand/10 font-bold text-brand uppercase">
                           {rsvp.guest_name.trim().charAt(0) || "?"}
                         </span>
                         <span className="min-w-0 flex-1 font-medium break-words">{rsvp.guest_name}</span>
@@ -162,7 +162,7 @@ export default async function InvitationPage({ params }: { params: Promise<{ id:
               </div>
             </>
           ) : (
-            <div className="panel border-coral/30 bg-linear-to-br from-coral/10 to-sun/10">
+            <div className="panel border-brand/30 bg-linear-to-br from-brand/10 to-sun/10">
               <h2 className="section-title">Tudo certo?</h2>
               <p className="mt-1 mb-5 text-muted">
                 Confira a prévia. Ao publicar, o convite ganha um link para compartilhar.

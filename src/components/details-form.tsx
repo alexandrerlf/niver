@@ -29,7 +29,7 @@ function Group({ icon, title, children }: { icon: IconName; title: string; child
   return (
     <fieldset className="grid gap-4 sm:grid-cols-2">
       <legend className="mb-4 flex items-center gap-2.5 text-sm font-bold">
-        <span className="flex size-8 items-center justify-center rounded-xl bg-coral/10 text-coral">
+        <span className="flex size-8 items-center justify-center rounded-xl bg-brand/10 text-brand">
           <Icon name={icon} className="size-[18px]" />
         </span>
         {title}

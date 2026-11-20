@@ -7,7 +7,7 @@ export function LogoMark({ className = "size-[1.6em]" }: { className?: string })
 
 export function Logo({ className = "text-2xl" }: { className?: string }) {
   return (
-    <span className={`inline-flex items-center gap-2 font-display font-semibold text-ink ${className}`}>
+    <span className={`inline-flex items-center gap-2 font-display font-black text-brand ${className}`}>
       <LogoMark />
       Niver
     </span>

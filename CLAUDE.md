@@ -35,7 +35,7 @@ Next.js 16 (App Router, React 19), Tailwind 4, Supabase (Auth, Postgres com RLS,
 ## Convenções
 
 - Todo texto de interface é em português do Brasil, frase curta, voz ativa, sem jargão técnico.
-- Estilos em tokens do `src/app/globals.css` (`--color-*`, `.button-primary`, `.panel`, `.field`). Não use cores soltas.
+- Estilos em tokens do `src/app/globals.css` (`--color-*`, `.button-primary`, `.panel`, `.field`). Não use cores soltas. A paleta é a do Leo (roxo `brand`, amarelo `sun`, `turquoise`, `coral`), com fonte Nunito Sans; detalhes em `docs/marca/variante-b.md`.
 - Ícones de `src/components/icons.tsx`. Ações destrutivas usam `ConfirmButton`.
 - Imagens do Storage passam por `next/image` com `sizes`.
 - Testes ficam ao lado do código (`*.test.ts`) e cobrem `src/lib`.

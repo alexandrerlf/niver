@@ -53,7 +53,7 @@ export function LoginForm() {
       <p className="text-center text-sm text-muted">
         Primeira vez por aqui?{" "}
         <button
-          className="cursor-pointer rounded font-semibold text-coral underline-offset-4 hover:underline disabled:opacity-60"
+          className="cursor-pointer rounded font-semibold text-brand underline-offset-4 hover:underline disabled:opacity-60"
           formAction={signUpAction}
           disabled={pending}
         >

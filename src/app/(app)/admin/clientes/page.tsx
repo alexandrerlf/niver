@@ -35,7 +35,7 @@ export default async function ClientsPage() {
             <ul className="mt-3 divide-y divide-line">
               {clients.map((email) => (
                 <li key={email} className="flex items-center gap-3 py-2.5">
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-coral/10 font-bold text-coral uppercase">
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand/10 font-bold text-brand uppercase">
                     {email.charAt(0)}
                   </span>
                   <span className="min-w-0 flex-1 font-medium break-words">{email}</span>
