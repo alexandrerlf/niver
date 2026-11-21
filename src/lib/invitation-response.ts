@@ -19,6 +19,8 @@ export function invitationResponse(
         "Content-Security-Policy": invitationCsp({ artUrl, appOrigin: origin, nonce }),
         "X-Content-Type-Options": "nosniff",
         "Referrer-Policy": "no-referrer",
+        // Convite de criança não aparece em buscadores.
+        "X-Robots-Tag": "noindex, nofollow",
         "Cache-Control": "private, no-cache",
       },
     },

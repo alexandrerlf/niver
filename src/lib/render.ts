@@ -96,6 +96,8 @@ const RUNTIME_STYLE = `
 .nv-error{color:#b3261e}
 .nv-sub{margin:-6px 0 8px;opacity:.85}
 .nv-hint{margin:12px 0 0;font-size:14px;opacity:.7}
+.nv-privacy{margin:10px 0 0;font-size:13px;opacity:.7}
+.nv-privacy a{color:inherit;font-weight:700;text-decoration:underline}
 .nv-box li b{font-weight:700}
 .nv-word{display:inline-flex;align-items:flex-end;vertical-align:top}
 .nv-word img{display:block;height:1.6em;max-width:none;margin:-.4em -.02em -.2em}
@@ -113,6 +115,7 @@ const RUNTIME_MARKUP = `
 <p class="nv-status" id="nv-status" role="status"></p>
 <div class="nv-row"><button class="nv-btn" type="button" id="nv-cancel" data-nv-close>Cancelar</button><button class="nv-btn nv-primary" type="button" id="nv-send">Confirmar</button></div>
 <p class="nv-hint" id="nv-hint">A confirmação chega direto para a família.</p>
+<p class="nv-privacy">Seu nome e o número de pessoas vão para quem enviou o convite. Saiba mais na <a href="{{privacy_url}}" target="_blank" rel="noopener">Política de Privacidade</a>.</p>
 </div></dialog>
 <dialog class="nv-dialog" id="nv-gifts" aria-labelledby="nv-gifts-title"><div class="nv-box">
 <h2 id="nv-gifts-title">Sugestões de presentes</h2>
@@ -250,7 +253,8 @@ export function renderInvitation(
     mapsUrl: mapsHref(invitation),
     gifts: invitation.gifts,
   }).replace(/</g, "\\u003c");
-  const tail = `${RUNTIME_MARKUP}
+  const markup = RUNTIME_MARKUP.replace("{{privacy_url}}", escapeHtml(`${appOrigin}/privacidade`));
+  const tail = `${markup}
 <script id="nv-config" type="application/json" nonce="${nonce}">${config}</script>
 <script nonce="${nonce}">${RUNTIME_SCRIPT}</script>`;
 

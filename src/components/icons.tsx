@@ -4,6 +4,22 @@ const PATHS = {
   plus: <path d="M12 5v14M5 12h14" />,
   check: <path d="M20 6 9 17l-5-5" />,
   arrowLeft: <path d="M19 12H5m7 7-7-7 7-7" />,
+  close: <path d="M18 6 6 18M6 6l12 12" />,
+  document: <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm0 0v6h6M8 13h8m-8 4h5" />,
+  download: <path d="M12 3v12m-5-5 5 5 5-5M5 21h14" />,
+  user: (
+    <>
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21a8 8 0 0 1 16 0" />
+    </>
+  ),
+  shield: <path d="M12 22s8-3.5 8-10V5l-8-3-8 3v7c0 6.5 8 10 8 10Zm-3-10 2 2 4-4" />,
+  help: (
+    <>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3m.1 4h.01" />
+    </>
+  ),
   arrowRight: <path d="M5 12h14m-7-7 7 7-7 7" />,
   trash: (
     <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m5 5v6m4-6v6" />
@@ -50,6 +66,23 @@ const PATHS = {
     <>
       <circle cx="12" cy="12" r="10" />
       <path d="M12 8v4m0 4h.01" />
+    </>
+  ),
+  play: <path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5Z" />,
+  pause: <path d="M8 4v16M16 4v16" />,
+  chevronDown: <path d="m6 9 6 6 6-6" />,
+  star: <path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z" />,
+  clock: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3 2" />
+    </>
+  ),
+  pencil: <path d="m4 20 4-1 11-11a2.1 2.1 0 0 0-3-3L5 16l-1 4Zm11-14 3 3" />,
+  phone: (
+    <>
+      <rect x="6" y="2" width="12" height="20" rx="3" />
+      <path d="M11 18h2" />
     </>
   ),
   sparkles: (

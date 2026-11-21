@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, type ReactNode } from "react";
 import type { FormState } from "@/app/actions";
 import { FormFeedback } from "@/components/form-feedback";
@@ -43,10 +44,13 @@ export function DetailsForm({
   save,
   invitation = EMPTY,
   submitLabel,
+  askGuardianConsent = false,
 }: {
   save: (state: FormState, form: FormData) => Promise<FormState>;
   invitation?: Values;
   submitLabel: string;
+  // Só na criação: o responsável autoriza o uso do nome e da idade da criança.
+  askGuardianConsent?: boolean;
 }) {
   const [state, action, pending] = useActionState(save, initial);
 
@@ -189,6 +193,23 @@ export function DetailsForm({
           </p>
         </div>
       </Group>
+
+      {askGuardianConsent && (
+        <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-line bg-sunken/60 p-4 text-sm">
+          <input
+            type="checkbox"
+            name="guardian_consent"
+            required
+            className="mt-0.5 size-5 shrink-0 cursor-pointer accent-brand"
+          />
+          <span>
+            Sou mãe, pai ou responsável pela criança e autorizo o uso do nome e da idade dela neste convite.{" "}
+            <Link href="/privacidade#criancas" target="_blank" className="font-semibold text-brand underline underline-offset-2">
+              Como cuidamos desses dados
+            </Link>
+          </span>
+        </label>
+      )}
 
       <div>
         <FormFeedback state={state} className="mb-4" />

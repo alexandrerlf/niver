@@ -1,6 +1,5 @@
 "use server";
 
-import { randomBytes } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -9,8 +8,10 @@ import {
   hasEventDetails,
   makeSlug,
   parseDetails,
+  parseNewDetails,
   type Invitation,
 } from "@/lib/invitation";
+import { slugCode } from "@/lib/slug-code";
 import { createClient, getUserId } from "@/lib/supabase/server";
 import { type Template } from "@/lib/template";
 
@@ -32,7 +33,7 @@ export async function signInWithPassword(_: FormState, form: FormData): Promise<
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword(credentials(form));
   if (error) return { error: "E-mail ou senha incorretos, ou e-mail ainda não confirmado." };
-  redirect("/");
+  redirect("/convites");
 }
 
 export async function signUp(_: FormState, form: FormData): Promise<FormState> {
@@ -66,7 +67,7 @@ export async function createInvitation(
   _: FormState,
   form: FormData,
 ): Promise<FormState> {
-  const parsed = parseDetails(form);
+  const parsed = parseNewDetails(form);
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Revise os campos." };
 
   const supabase = await createClient();
@@ -89,7 +90,8 @@ export async function createInvitation(
     .insert({
       ...parsed.data,
       owner_id: ownerId,
-      slug: makeSlug(child_name, age, randomBytes(3).toString("hex")),
+      slug: makeSlug(child_name, age, slugCode()),
+      guardian_consent_at: new Date().toISOString(),
       template_id: chosen.id,
       image_path: chosen.art_path,
       html_template: chosen.html,
@@ -154,6 +156,40 @@ export async function deleteInvitation(id: string) {
   await supabase.from("invitations").delete().eq("id", id);
   await removeOwnArt(supabase, ownerId, data?.image_path);
 
-  revalidatePath("/");
+  revalidatePath("/convites");
+  redirect("/convites");
+}
+
+// Marca na conta que o tutorial foi visto, para não aparecer de novo em nenhum aparelho.
+export async function completeTutorial() {
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getClaims();
+  if (!data?.claims || data.claims.user_metadata?.onboarded_at) return;
+  const { error } = await supabase.auth.updateUser({ data: { onboarded_at: new Date().toISOString() } });
+  if (error) {
+    console.error("completeTutorial", error);
+    return;
+  }
+  // Renova o token para a marca já valer nas próximas páginas.
+  await supabase.auth.refreshSession();
+}
+
+// Exclusão da conta pelo titular (art. 18 da LGPD). Convites e presenças caem junto no banco.
+export async function deleteAccount() {
+  const supabase = await createClient();
+  const ownerId = await getUserId(supabase);
+  if (!ownerId) redirect("/login");
+
+  // Artes enviadas pelo próprio cliente ficam numa pasta com o id dele; as dos modelos não são apagadas.
+  const { data: invitations } = await supabase.from("invitations").select("image_path").eq("owner_id", ownerId);
+  for (const invitation of invitations ?? []) await removeOwnArt(supabase, ownerId, invitation.image_path);
+
+  const { error } = await supabase.rpc("delete_my_account");
+  if (error) {
+    console.error("deleteAccount", error);
+    redirect("/conta?erro=exclusao");
+  }
+  // A conta já não existe: encerra só a sessão deste navegador, sem chamar o servidor.
+  await supabase.auth.signOut({ scope: "local" });
   redirect("/");
 }

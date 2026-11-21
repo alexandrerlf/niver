@@ -16,6 +16,13 @@ const nextConfig: NextConfig = {
         ]
       : [],
   },
+  // A vitrine morava em /apresentacao; links antigos vão para a página inicial.
+  async redirects() {
+    return [
+      { source: "/apresentacao", destination: "/", permanent: true },
+      { source: "/apresentacao/:path*", destination: "/", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

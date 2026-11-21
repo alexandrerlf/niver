@@ -4,6 +4,7 @@ import { signOut } from "@/app/actions";
 import { Icon } from "@/components/icons";
 import { Logo } from "@/components/logo";
 import { BottomNav, TopNav } from "@/components/nav";
+import { Welcome } from "@/components/welcome";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function AppLayout({ children }: { children: ReactNode }) {
@@ -14,24 +15,27 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   ]);
   const admin = isAdmin === true;
   const email = typeof auth?.claims.email === "string" ? auth.claims.email : "";
+  const onboarded = Boolean(auth?.claims.user_metadata?.onboarded_at);
 
   return (
     <>
       <header className="sticky top-0 z-30 border-b border-line/70 bg-paper/75 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-3 px-4 sm:px-6">
-          <Link href="/" aria-label="Niver, início" className="rounded-xl">
+          <Link href="/convites" aria-label="Niver, seus convites" className="rounded-xl">
             <Logo />
           </Link>
           {admin && <TopNav />}
           <div className="flex items-center gap-1">
-            {email && (
-              <span
-                title={email}
-                className="flex size-9 items-center justify-center rounded-full bg-ink text-sm font-bold text-paper uppercase"
-              >
-                {email.charAt(0)}
+            <Link
+              href="/conta"
+              aria-label="Minha conta"
+              title={email ? `Minha conta (${email})` : "Minha conta"}
+              className="flex size-11 items-center justify-center rounded-full transition duration-200 hover:bg-ink/5"
+            >
+              <span className="flex size-9 items-center justify-center rounded-full bg-ink text-sm font-bold text-paper uppercase">
+                {email ? email.charAt(0) : <Icon name="user" className="size-5" />}
               </span>
-            )}
+            </Link>
             <form action={signOut}>
               <button className="icon-button" aria-label="Sair" title="Sair">
                 <Icon name="logout" />
@@ -44,6 +48,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
         {children}
       </div>
       {admin && <BottomNav />}
+      <Welcome onboarded={onboarded} raised={admin} />
     </>
   );
 }
