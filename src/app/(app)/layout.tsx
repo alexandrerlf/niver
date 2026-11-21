@@ -4,6 +4,7 @@ import { signOut } from "@/app/actions";
 import { Icon } from "@/components/icons";
 import { Logo } from "@/components/logo";
 import { BottomNav, TopNav } from "@/components/nav";
+import { Welcome } from "@/components/welcome";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function AppLayout({ children }: { children: ReactNode }) {
@@ -14,6 +15,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   ]);
   const admin = isAdmin === true;
   const email = typeof auth?.claims.email === "string" ? auth.claims.email : "";
+  const onboarded = Boolean(auth?.claims.user_metadata?.onboarded_at);
 
   return (
     <>
@@ -24,14 +26,16 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
           </Link>
           {admin && <TopNav />}
           <div className="flex items-center gap-1">
-            {email && (
-              <span
-                title={email}
-                className="flex size-9 items-center justify-center rounded-full bg-ink text-sm font-bold text-paper uppercase"
-              >
-                {email.charAt(0)}
+            <Link
+              href="/conta"
+              aria-label="Minha conta"
+              title={email ? `Minha conta (${email})` : "Minha conta"}
+              className="flex size-11 items-center justify-center rounded-full transition duration-200 hover:bg-ink/5"
+            >
+              <span className="flex size-9 items-center justify-center rounded-full bg-ink text-sm font-bold text-paper uppercase">
+                {email ? email.charAt(0) : <Icon name="user" className="size-5" />}
               </span>
-            )}
+            </Link>
             <form action={signOut}>
               <button className="icon-button" aria-label="Sair" title="Sair">
                 <Icon name="logout" />
@@ -44,6 +48,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
         {children}
       </div>
       {admin && <BottomNav />}
+      <Welcome onboarded={onboarded} raised={admin} />
     </>
   );
 }

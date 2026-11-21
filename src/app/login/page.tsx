@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { signInWithGoogle } from "@/app/actions";
 import { ErrorMessage } from "@/components/form-feedback";
 import { GoogleIcon } from "@/components/icons";
@@ -44,6 +45,17 @@ export default async function LoginPage({
           <span className="h-px flex-1 bg-line" />
         </div>
         <LoginForm />
+        <p className="mt-6 text-center text-sm text-muted">
+          Ao continuar, você concorda com os{" "}
+          <Link href="/termos" className="font-semibold text-brand underline underline-offset-2">
+            Termos de Uso
+          </Link>{" "}
+          e a{" "}
+          <Link href="/privacidade" className="font-semibold text-brand underline underline-offset-2">
+            Política de Privacidade
+          </Link>
+          .
+        </p>
       </main>
       <LoginShowcase />
     </div>

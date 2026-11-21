@@ -285,6 +285,8 @@ export function LandingPage({ showPlaceholders = false }: { showPlaceholders?: b
           <nav aria-label="Rodapé" className="flex flex-wrap items-center gap-1 font-extrabold text-[#4a1fa3]">
             <a href="#como-funciona" className="rounded-full px-3 py-2 hover:bg-[#f1ecfc]">Como funciona</a>
             <a href="#duvidas" className="rounded-full px-3 py-2 hover:bg-[#f1ecfc]">Dúvidas</a>
+            <Link href="/privacidade" className="rounded-full px-3 py-2 hover:bg-[#f1ecfc]">Privacidade</Link>
+            <Link href="/termos" className="rounded-full px-3 py-2 hover:bg-[#f1ecfc]">Termos</Link>
             <Link href="/login" className="rounded-full px-3 py-2 hover:bg-[#f1ecfc]">Entrar</Link>
           </nav>
         </div>

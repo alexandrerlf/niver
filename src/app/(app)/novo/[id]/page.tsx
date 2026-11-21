@@ -41,7 +41,7 @@ export default async function NewFromTemplatePage({ params }: { params: Promise<
         </figure>
         <div className="panel">
           <h2 className="section-title mb-6">Dados da festa</h2>
-          <DetailsForm save={createInvitation.bind(null, template.id)} submitLabel="Criar convite" />
+          <DetailsForm save={createInvitation.bind(null, template.id)} submitLabel="Criar convite" askGuardianConsent />
         </div>
       </section>
     </main>

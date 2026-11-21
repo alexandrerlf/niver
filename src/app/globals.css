@@ -153,6 +153,28 @@ body {
     @apply font-display text-2xl leading-tight font-extrabold;
   }
 
+  /* Texto corrido da Política de Privacidade e dos Termos de Uso. */
+  .legal-text {
+    @apply space-y-10 text-base leading-relaxed;
+  }
+  .legal-text h2 {
+    @apply mb-3 font-display text-xl leading-tight font-extrabold;
+  }
+  .legal-text p + p,
+  .legal-text p + ul,
+  .legal-text ul + p {
+    @apply mt-3;
+  }
+  .legal-text ul {
+    @apply list-disc space-y-1.5 pl-5 marker:text-brand;
+  }
+  .legal-text a {
+    @apply font-semibold text-brand underline decoration-brand/40 underline-offset-2 hover:decoration-brand;
+  }
+  .legal-text strong {
+    @apply font-bold;
+  }
+
   .badge {
     @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold;
   }
