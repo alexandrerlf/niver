@@ -62,3 +62,10 @@ O sistema SHALL usar as mesmas janelas de confirmação e de sugestões de prese
 - GIVEN um convite sem sugestões de presentes
 - WHEN o convidado abre o link
 - THEN o botão de presentes não aparece
+
+### Requirement: Aviso ao convidado sobre o uso dos dados
+O sistema SHALL informar, na janela de confirmação de presença, que o nome e o número de pessoas informados vão para quem enviou o convite, com link para a Política de Privacidade.
+
+#### Scenario: Convidado abre a confirmação
+- **WHEN** o convidado abre a janela de confirmar presença
+- **THEN** vê o aviso de que o nome e o número de pessoas vão para quem enviou o convite e um link para a Política de Privacidade, que abre em outra aba
