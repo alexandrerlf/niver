@@ -9,7 +9,7 @@ export default function NotFound() {
         icon={<Icon name="mail" className="size-8" />}
         title="Não encontramos esta página"
         action={
-          <Link href="/" className="button-primary">
+          <Link href="/convites" className="button-primary">
             Ver meus convites
           </Link>
         }

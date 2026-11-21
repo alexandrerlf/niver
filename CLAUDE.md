@@ -16,7 +16,8 @@ Next.js 16 (App Router, React 19), Tailwind 4, Supabase (Auth, Postgres com RLS,
 
 ## Mapa do código
 
-- `src/app/(app)/`: telas logadas. `/` convites, `/novo` catálogo, `/convites/[id]` gestão, `/admin/*` só para admin.
+- `src/app/page.tsx`: vitrine em `/` para quem não está logado (componentes em `src/components/landing/`); quem está logado vai para `/convites`.
+- `src/app/(app)/`: telas logadas. `/convites` lista, `/novo` catálogo, `/convites/[id]` gestão, `/admin/*` só para admin.
 - `src/app/c/[slug]`: convite público. `src/app/previa/*`: prévias de modelo e convite, que nunca registram presença.
 - `src/app/actions.ts` e `src/app/admin-actions.ts`: server actions. Toda escrita no banco passa por elas.
 - `src/lib/render.ts`: monta o convite a partir do HTML do modelo, valida modelos (`templateProblems`) e define o CSP.

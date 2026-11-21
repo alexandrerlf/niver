@@ -61,7 +61,7 @@ export default async function InvitationPage({ params }: { params: Promise<{ id:
   return (
     <main>
       <div className="mb-8 animate-rise sm:mb-10">
-        <BackLink href="/">Convites</BackLink>
+        <BackLink href="/convites">Convites</BackLink>
         {!published && (
           <div className="mt-3">
             <Stepper current={2} />

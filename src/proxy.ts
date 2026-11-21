@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PUBLIC_PREFIXES = ["/login", "/auth", "/api", "/apresentacao"];
+const PUBLIC_PREFIXES = ["/login", "/auth", "/api"];
 
 export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -31,14 +31,8 @@ export async function proxy(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const { pathname } = request.nextUrl;
 
-  // Sem sessão, o endereço principal mostra a apresentação; com sessão, os convites.
-  if (!data?.claims && pathname === "/") {
-    const rewrite = NextResponse.rewrite(new URL("/apresentacao", request.url));
-    supabaseResponse.cookies.getAll().forEach((cookie) => rewrite.cookies.set(cookie));
-    return rewrite;
-  }
-
-  if (!data?.claims && !PUBLIC_PREFIXES.some((prefix) => pathname.startsWith(prefix))) {
+  // O endereço principal é a vitrine e fica aberto; quem tem sessão é levado aos convites pela própria página.
+  if (!data?.claims && pathname !== "/" && !PUBLIC_PREFIXES.some((prefix) => pathname.startsWith(prefix))) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.search = "";
@@ -56,6 +50,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|c/|api/rsvp|offline|sw\\.js|manifest\\.webmanifest|icons/|brand/|alfabetos/|favicon\\.ico).*)",
+    "/((?!_next/static|_next/image|c/|api/rsvp|offline|sw\\.js|manifest\\.webmanifest|icons/|brand/|landing/|alfabetos/|favicon\\.ico).*)",
   ],
 };

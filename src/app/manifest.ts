@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: "Niver",
     description: "Crie convites de aniversário interativos.",
     lang: "pt-BR",
-    start_url: "/",
+    start_url: "/convites",
     scope: "/",
     display: "standalone",
     background_color: "#fbfaff",
