@@ -144,15 +144,6 @@ export function LandingPage({ showPlaceholders = false }: { showPlaceholders?: b
                 className="aspect-[9/16] w-full rounded-[1.6rem] object-cover"
               />
             </div>
-            <div className="absolute top-6 -left-2 z-20 flex items-center gap-3 rounded-2xl bg-white py-2.5 pr-4 pl-2.5 shadow-[0_16px_40px_-16px_rgb(41_27_67/0.45)] sm:left-0">
-              <span className="flex size-9 items-center justify-center rounded-full bg-[#d6f4f1] text-[#0e8a82]">
-                <Icon name="check" className="size-[18px]" />
-              </span>
-              <span className="text-sm leading-tight">
-                <span className="block font-black">Vovó Ana confirmou</span>
-                <span className="block text-[#5b4d80]">3 pessoas</span>
-              </span>
-            </div>
           </div>
         </section>
       </div>
