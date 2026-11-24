@@ -99,6 +99,8 @@ const RUNTIME_STYLE = `
 .nv-privacy{margin:10px 0 0;font-size:13px;opacity:.7}
 .nv-privacy a{color:inherit;font-weight:700;text-decoration:underline}
 .nv-box li b{font-weight:700}
+.nv-mark{position:fixed;inset:-60vmax;z-index:2147483646;pointer-events:none;display:flex;flex-wrap:wrap;align-content:center;justify-content:center;gap:1.6em 2.4em;transform:rotate(-28deg);font:900 clamp(26px,7vw,52px)/1 system-ui,sans-serif;letter-spacing:.08em;color:rgba(41,27,67,.2);text-shadow:0 0 2px rgba(255,255,255,.7);user-select:none;-webkit-user-select:none}
+.nv-mark-note{position:fixed;left:50%;bottom:20px;z-index:2147483647;transform:translateX(-50%);width:max-content;max-width:calc(100vw - 32px);box-sizing:border-box;padding:12px 18px;border-radius:999px;background:#291b43;color:#fff;font:700 15px/1.3 system-ui,sans-serif;text-align:center}
 .nv-word{display:inline-flex;align-items:flex-end;vertical-align:top}
 .nv-word img{display:block;height:1.6em;max-width:none;margin:-.4em -.02em -.2em}
 .nv-word img.nv-digit{height:1.76em;margin-top:-.56em}
@@ -128,6 +130,16 @@ const RUNTIME_SCRIPT = `
 (function(){
 var c=JSON.parse(document.getElementById("nv-config").textContent);
 var $=function(id){return document.getElementById(id)};
+if(c.mark){
+  // Prévia sem pagamento ou convite encerrado: os botões só avisam.
+  var noteTimer;
+  document.addEventListener("click",function(e){
+    var target=e.target.closest&&e.target.closest("[data-action]");
+    if(!target)return;
+    e.preventDefault();e.stopImmediatePropagation();
+    var note=$("nv-mark-note");note.hidden=false;clearTimeout(noteTimer);noteTimer=setTimeout(function(){note.hidden=true},3500);
+  },true);
+}
 var all=function(sel){return Array.prototype.slice.call(document.querySelectorAll(sel))};
 var glyph=function(ch){
   var up=ch.toUpperCase(),known=/^[A-Z0-9ÁÀÂÃÉÈÊËÍÌÎÏÓÒÔÕÚÙÛÜÇ]$/;
@@ -205,6 +217,20 @@ $("nv-send").addEventListener("click",function(){
 });
 })();`;
 
+export type InvitationMark = "draft" | "archived";
+
+const MARKS: Record<InvitationMark, { word: string; note: string }> = {
+  draft: { word: "PRÉVIA", note: "Esta é uma prévia. Publique para liberar." },
+  archived: { word: "ENCERRADO", note: "Este convite foi encerrado." },
+};
+
+// A marca fica fora do HTML do modelo, por cima de tudo, e não captura toques.
+function markMarkup(mark: InvitationMark) {
+  const { word, note } = MARKS[mark];
+  return `<div class="nv-mark" aria-hidden="true">${`<span>${word}</span>`.repeat(48)}</div>
+<p class="nv-mark-note" id="nv-mark-note" role="status" hidden>${note}</p>`;
+}
+
 export function renderInvitation(
   invitation: PublicInvitation,
   options: {
@@ -213,10 +239,13 @@ export function renderInvitation(
     pageUrl: string;
     nonce: string;
     preview?: boolean;
+    // Marca d'água da prévia sem pagamento ("draft") ou do convite encerrado ("archived").
+    mark?: InvitationMark | null;
     now?: Date;
   },
 ) {
   const { artUrl, appOrigin, pageUrl, nonce, preview, now } = options;
+  const mark = options.mark ?? null;
   const name = splitName(invitation.child_name);
   const values: Record<string, string> = {
     art_url: artUrl,
@@ -247,14 +276,15 @@ export function renderInvitation(
   const config = JSON.stringify({
     origin: appOrigin,
     childName: invitation.child_name,
-    rsvpUrl: preview ? null : `${appOrigin}/api/rsvp/${invitation.slug}`,
+    rsvpUrl: preview || mark ? null : `${appOrigin}/api/rsvp/${invitation.slug}`,
     rsvpDeadline: formatDateShort(invitation.rsvp_deadline),
     rsvpClosed: isPast(invitation.rsvp_deadline, now),
     mapsUrl: mapsHref(invitation),
     gifts: invitation.gifts,
+    mark,
   }).replace(/</g, "\\u003c");
   const markup = RUNTIME_MARKUP.replace("{{privacy_url}}", escapeHtml(`${appOrigin}/privacidade`));
-  const tail = `${markup}
+  const tail = `${markup}${mark ? markMarkup(mark) : ""}
 <script id="nv-config" type="application/json" nonce="${nonce}">${config}</script>
 <script nonce="${nonce}">${RUNTIME_SCRIPT}</script>`;
 

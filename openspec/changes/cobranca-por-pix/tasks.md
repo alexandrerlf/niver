@@ -10,10 +10,10 @@
 
 ## 2. Regras em código, com testes antes
 
-- [ ] 2.1 `src/lib/pricing.ts` com preço em centavos e `expiryFor(eventDate, paidAt)` espelhando a regra do banco, com testes dos três cenários de validade (verificar com `npm run check`)
-- [ ] 2.2 Marca no `render.ts`: modo `draft` ("PRÉVIA", botões desativados com o aviso) e `archived` ("ENCERRADO"), injetada fora do HTML do modelo, com testes (verificar: prévia de rascunho contém a marca e não tem `rsvpUrl`; convite publicado não tem marca)
-- [ ] 2.3 `src/lib/mercado-pago.ts`: montar a order Pix, ler QR code e copia e cola da resposta e conferir se a order está paga com valor e referência certos, com testes sobre respostas de exemplo (verificar com `npm run check`)
-- [ ] 2.4 Validação da assinatura `x-signature` do webhook, com testes de assinatura válida, inválida e expirada (verificar com `npm run check`)
+- [x] 2.1 `src/lib/pricing.ts` com preço em centavos e `expiryFor(eventDate, paidAt)` espelhando a regra do banco, com testes dos três cenários de validade (verificar com `npm run check`)
+- [x] 2.2 Marca no `render.ts`: modo `draft` ("PRÉVIA", botões desativados com o aviso) e `archived` ("ENCERRADO"), injetada fora do HTML do modelo, com testes (verificar: prévia de rascunho contém a marca e não tem `rsvpUrl`; convite publicado não tem marca)
+- [x] 2.3 `src/lib/mercado-pago.ts`: montar a order Pix, ler QR code e copia e cola da resposta e conferir se a order está paga com valor e referência certos, com testes sobre respostas de exemplo (verificar com `npm run check`)
+- [x] 2.4 Validação da assinatura `x-signature` do webhook, com testes de assinatura válida, inválida e expirada (verificar com `npm run check`)
 
 ## 3. Cobrança e publicação no servidor
 
