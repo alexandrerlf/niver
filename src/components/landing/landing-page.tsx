@@ -35,7 +35,8 @@ const FAQ = [
   { q: "Como eu envio o convite?", a: "Você recebe um link. Dá para enviar pelo WhatsApp com um toque, copiar para outros aplicativos ou mandar quantas vezes quiser." },
   { q: "Posso mudar a data, o horário ou o local depois de enviar?", a: "Pode. Você edita os dados no app e o mesmo link passa a mostrar as informações novas. Não precisa reenviar." },
   { q: "Como acompanho quem vai?", a: "No app aparece cada resposta com o nome e quantas pessoas vão, além do total confirmado." },
-  { q: "Quem pode criar convites agora?", a: "O Niver está em lançamento e a criação de convites está liberada para contas convidadas. Crie sua conta e peça a liberação." },
+  { q: "Quanto custa?", a: "Criar o convite e ver a prévia é grátis. Para publicar e receber o link, você paga R$ 5,00 por Pix, uma vez só por convite." },
+  { q: "Por quanto tempo o convite fica no ar?", a: "Até 7 dias depois da festa. Nesse período, compartilhe o link quantas vezes quiser. Mudou a data? A validade acompanha." },
 ];
 
 function Cta({ className = "", tone = "purple", children = "Criar meu convite" }: { className?: string; tone?: "purple" | "yellow"; children?: string }) {

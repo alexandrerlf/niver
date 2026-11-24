@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage, LegalSection } from "@/components/legal-page";
 import { LEGAL } from "@/lib/legal";
+import { PRICE_CENTS, formatPrice } from "@/lib/pricing";
 
 export const metadata: Metadata = {
   title: "Termos de Uso",
@@ -26,7 +27,7 @@ export default function TermsPage() {
         <ul>
           <li>Você precisa ter 18 anos ou mais para criar uma conta.</li>
           <li>Mantenha sua senha em segredo. O que for feito na sua conta é de sua responsabilidade.</li>
-          <li>Durante o lançamento, a criação de convites fica liberada só para contas autorizadas.</li>
+          <li>Qualquer pessoa com conta confirmada pode criar convites.</li>
         </ul>
       </LegalSection>
 
@@ -52,11 +53,27 @@ export default function TermsPage() {
         </p>
       </LegalSection>
 
-      <LegalSection id="preco" title="Preço">
-        <p>
-          Durante o lançamento, o Niver é gratuito. Se passarmos a cobrar, o preço e as condições aparecem antes
-          do pagamento, e nada é cobrado sem a sua confirmação.
-        </p>
+      <LegalSection id="preco" title="Preço e validade">
+        <ul>
+          <li>Criar o convite e ver a prévia é grátis.</li>
+          <li>
+            Para publicar e receber o link, você paga {formatPrice(PRICE_CENTS)} por Pix, uma vez por convite. O preço
+            aparece antes de gerar o Pix, e nada é cobrado sem o seu pagamento.
+          </li>
+          <li>
+            O convite fica no ar até 7 dias depois da data da festa, ou 7 dias depois do pagamento se ele for feito
+            depois da festa. Se você mudar a data da festa, a validade acompanha, até 90 dias depois do pagamento.
+          </li>
+          <li>
+            Depois desse prazo, o link mostra que o convite foi encerrado. O convite e as presenças continuam na sua
+            conta, e você pode colocá-lo de volta no ar pagando de novo.
+          </li>
+          <li>
+            Se quiser desistir da compra, peça o reembolso pelo e-mail{" "}
+            <a href={`mailto:${LEGAL.privacyEmail}`}>{LEGAL.privacyEmail}</a> em até 7 dias depois do pagamento,
+            como prevê o Código de Defesa do Consumidor.
+          </li>
+        </ul>
       </LegalSection>
 
       <LegalSection id="disponibilidade" title="Disponibilidade e responsabilidade">

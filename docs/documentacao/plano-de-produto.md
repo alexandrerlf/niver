@@ -11,8 +11,8 @@ O Niver é um catálogo **curado** de convites interativos. Não vira editor liv
 | Item | Situação |
 |---|---|
 | 1. Prazo para confirmar presença | Feito |
-| 2. Foto da criança no convite | Planejado |
-| 3. Pagamento por Pix (Mercado Pago) | Planejado, aguardando decisões |
+| 2. Foto da criança no convite | Backlog |
+| 3. Pagamento por Pix (Mercado Pago) | Implementado, falta o teste de ponta a ponta e as credenciais de produção |
 
 ## 1. Prazo para confirmar presença
 
@@ -21,7 +21,9 @@ O Niver é um catálogo **curado** de convites interativos. Não vira editor liv
 - Dentro do prazo, a janela de confirmação avisa a data limite. Depois, mostra que as confirmações foram encerradas.
 - O bloqueio vale no banco (política da tabela `rsvps`), não só na tela.
 
-## 2. Foto da criança
+## 2. Foto da criança (backlog)
+
+Fica para depois do Pix. O plano já discutido:
 
 Para a foto não quebrar o layout:
 
@@ -32,23 +34,22 @@ Para a foto não quebrar o layout:
 
 ## 3. Pagamento por Pix (Mercado Pago)
 
+- **Preço:** R$ 5,00 por publicação. Reativar custa o mesmo.
 - **Fluxo.** O cliente cria o convite e vê a prévia de graça. Ao publicar, o app gera a cobrança Pix. O Mercado Pago avisa o app quando o pagamento cai, e só então o link passa a existir.
-- **3.1 Bloqueio.** Só o servidor publica, depois de confirmar o pagamento. Hoje o cliente consegue mudar a situação do convite; isso precisa sair da permissão dele. `/c/<slug>` responde apenas se o convite estiver pago e dentro da validade.
-- **3.2 Print.** Nenhum site impede captura de tela. A proteção é a prévia levar marca d'água de "PRÉVIA" e ter os botões desativados antes do pagamento. Um print do convite pago não confirma presença nem abre o mapa.
-- **3.3 Aviso.** Na tela de pagamento e na página do convite: "Ativo até dd/mm. Compartilhe o link quantas vezes quiser."
-- **3.4 Arquivamento.** Automático pela data. Depois do prazo, o link mostra uma página de convite encerrado.
-- **3.5 Histórico.** O convite arquivado continua na conta, com a prévia e a lista de presenças só para leitura, sem link público.
+- **Cadastro aberto.** Qualquer conta confirmada cria convites; só o pagamento coloca o convite no ar. A lista de e-mails liberados e a tela "Clientes" deixam de ser usadas. Até o app do Google ser publicado, o login com Google fica limitado aos usuários de teste do Google Cloud Console; o cadastro por e-mail e senha fica aberto.
+- **Bloqueio.** Só o servidor publica, depois de confirmar o pagamento. O cliente perde a permissão de mudar a situação do convite. `/c/<slug>` responde apenas se o convite estiver publicado e dentro da validade.
+- **Marca d'água.** Nenhum site impede print. A prévia não paga leva "PRÉVIA" repetido sobre todo o convite, injetado pelo servidor fora do HTML do modelo, e fica com confirmar presença, mapa e presentes desativados. Um print da prévia não serve como convite.
+- **Validade.** Ativo até 7 dias depois da festa (ou do pagamento, se for depois da festa). Se a festa mudar de data, a validade acompanha, até 90 dias depois do pagamento. Aviso na compra e na gestão: "Ativo até dd/mm. Compartilhe o link quantas vezes quiser."
+- **Cortesia.** O admin publica sem pagar, com a mesma validade.
+- **Arquivamento.** Automático pela data. Depois do prazo, o link mostra uma página de convite encerrado.
+- **Histórico e reativação.** O convite arquivado continua na conta, com a prévia e as presenças só para leitura. Um novo pagamento de R$ 5,00 o coloca de volta no ar com o mesmo link.
+- **Convites já publicados.** Recebem validade de 7 dias depois da festa, com pelo menos 7 dias a partir da entrada da cobrança.
 
 A especificação formal está em `openspec/changes/cobranca-por-pix/` (proposta, requisitos com cenários e design).
 
-### Decisões em aberto
+### Pendente
 
-1. **Preço.**
-2. **Validade.** Um mês contado do pagamento derruba o convite antes da festa se a pessoa pagar com muita antecedência. Sugestão: ativo até 7 dias depois da festa, ou um mês com esse mínimo garantido.
-3. **Cadastro.** Continua só para e-mails liberados, ou aberto a qualquer pessoa que pague?
-4. **Cortesia.** O admin publica sem pagar, para testes e presentes?
-5. **Reativação.** Convite arquivado volta ao ar pagando de novo?
-6. **Conta do Mercado Pago** com Pix habilitado e credenciais de teste.
+Os passos que faltam para cobrar de verdade (credenciais de produção, `MERCADOPAGO_TEST_PAYER`, chave Pix, SMTP, domínio, revisão jurídica) estão em `docs/documentacao/lancamento.md`.
 
 ## Fora do plano por enquanto
 

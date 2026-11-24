@@ -8,7 +8,7 @@ export const ART_TYPES: Record<string, string> = {
   "image/webp": "webp",
 };
 
-export type InvitationStatus = "draft" | "published";
+export type InvitationStatus = "draft" | "published" | "archived";
 
 export type Invitation = {
   id: string;
@@ -27,6 +27,8 @@ export type Invitation = {
   image_path: string | null;
   html_template: string | null;
   template_id: string | null;
+  paid_at: string | null;
+  expires_at: string | null;
   created_at: string;
   updated_at: string;
 };

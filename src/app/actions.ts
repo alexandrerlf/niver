@@ -121,22 +121,6 @@ export async function saveDetails(id: string, _: FormState, form: FormData): Pro
   return { notice: "Alterações salvas." };
 }
 
-export async function publishInvitation(id: string): Promise<FormState> {
-  const supabase = await createClient();
-  const { data } = await supabase.from("invitations").select("*").eq("id", id).maybeSingle();
-  const invitation = data as Invitation | null;
-  if (!invitation) return { error: "Convite não encontrado." };
-  if (!hasEventDetails(invitation) || !invitation.html_template || !invitation.image_path) {
-    return { error: "Preencha nome, data, horário e local antes de publicar." };
-  }
-
-  const { error } = await supabase.from("invitations").update({ status: "published" }).eq("id", id);
-  if (error) return { error: "Não foi possível publicar. Tente de novo." };
-
-  revalidatePath(`/convites/${id}`);
-  return { notice: "Convite publicado." };
-}
-
 // A arte do modelo é compartilhada: só a que um cliente enviou antes, quando isso era permitido,
 // pode ser apagada com o convite.
 async function removeOwnArt(

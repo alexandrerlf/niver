@@ -1,15 +1,16 @@
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
-import { deleteInvitation, publishInvitation, saveDetails } from "@/app/actions";
-import { ActionButton } from "@/components/action-button";
+import { deleteInvitation, saveDetails } from "@/app/actions";
 import { BackLink } from "@/components/back-link";
 import { DeleteInvitationButton } from "@/components/delete-invitation-button";
 import { DetailsForm } from "@/components/details-form";
 import { Icon, type IconName } from "@/components/icons";
+import { PixPanel } from "@/components/pix-panel";
 import { ShareLinks } from "@/components/share-links";
 import { Stepper } from "@/components/stepper";
 import { countdownLabel, daysUntil, isPast } from "@/lib/countdown";
 import { type Invitation } from "@/lib/invitation";
+import { PRICE_CENTS, formatPrice, lastActiveDay, lastDayOf } from "@/lib/pricing";
 import { formatDate, formatDateShort, formatTime } from "@/lib/render";
 import { createClient, getUserId } from "@/lib/supabase/server";
 
@@ -30,16 +31,21 @@ export default async function InvitationPage({ params }: { params: Promise<{ id:
   const supabase = await createClient();
   // O banco deixa qualquer conta ler convites publicados: esta tela é só do dono.
   const userId = await getUserId(supabase);
-  const { data } = await supabase
-    .from("invitations")
-    .select("*")
-    .eq("id", id)
-    .eq("owner_id", userId)
-    .maybeSingle();
+  const { data } = await supabase.from("invitations").select("*").eq("id", id).eq("owner_id", userId).maybeSingle();
   const invitation = data as Invitation | null;
   if (!invitation) notFound();
 
-  const published = invitation.status === "published";
+  // Publicado e dentro da validade; vencido ou arquivado vira histórico, só para leitura.
+  const expired =
+    invitation.status === "archived" ||
+    (invitation.status === "published" &&
+      invitation.expires_at !== null &&
+      Date.parse(invitation.expires_at) <= Date.now());
+  const published = invitation.status === "published" && !expired;
+  const draft = invitation.status === "draft";
+  const { data: isAdmin } = await supabase.rpc("is_admin");
+  const price = formatPrice(PRICE_CENTS);
+  const nextLastDay = formatDateShort(lastActiveDay(invitation.event_date, new Date()));
   const requestHeaders = await headers();
   const protocol = requestHeaders.get("x-forwarded-proto") ?? "https";
   const inviteUrl = `${protocol}://${requestHeaders.get("host")}/c/${invitation.slug}`;
@@ -62,7 +68,7 @@ export default async function InvitationPage({ params }: { params: Promise<{ id:
     <main>
       <div className="mb-8 animate-rise sm:mb-10">
         <BackLink href="/convites">Convites</BackLink>
-        {!published && (
+        {draft && (
           <div className="mt-3">
             <Stepper current={2} />
           </div>
@@ -73,13 +79,18 @@ export default async function InvitationPage({ params }: { params: Promise<{ id:
               <span className="badge-dot" />
               No ar
             </span>
+          ) : expired ? (
+            <span className="badge bg-sunken text-muted">
+              <span className="badge-dot" />
+              Encerrado
+            </span>
           ) : (
             <span className="badge bg-sun/25 text-ink">
               <span className="badge-dot text-sun" />
               Rascunho
             </span>
           )}
-          {days !== null && <span className="badge bg-sunken text-muted">{countdownLabel(days)}</span>}
+          {days !== null && !expired && <span className="badge bg-sunken text-muted">{countdownLabel(days)}</span>}
         </div>
         <h1 className="page-title mt-3 break-words">{invitation.child_name || "Sem nome"}</h1>
         {details.length > 0 && (
@@ -108,7 +119,7 @@ export default async function InvitationPage({ params }: { params: Promise<{ id:
             />
           </div>
           <figcaption className="mt-4 text-center text-sm text-muted">
-            {published ? "Como os convidados veem" : "Prévia do convite"}
+            {published ? "Como os convidados veem" : expired ? "Convite encerrado" : "Prévia do convite"}
           </figcaption>
         </figure>
 
@@ -127,7 +138,13 @@ export default async function InvitationPage({ params }: { params: Promise<{ id:
 
               <div className="panel">
                 <h2 className="section-title">Compartilhar</h2>
-                <p className="mt-1 mb-5 text-muted">Envie o link. Os convidados confirmam presença no próprio convite.</p>
+                <p className="mt-1 text-muted">Envie o link. Os convidados confirmam presença no próprio convite.</p>
+                {invitation.expires_at && (
+                  <p className="mt-2 mb-5 font-semibold">
+                    Ativo até {formatDateShort(lastDayOf(invitation.expires_at))}. Compartilhe o link quantas vezes
+                    quiser.
+                  </p>
+                )}
                 <ShareLinks url={inviteUrl} name={invitation.child_name} />
               </div>
 
@@ -162,39 +179,59 @@ export default async function InvitationPage({ params }: { params: Promise<{ id:
               </div>
             </>
           ) : (
-            <div className="panel border-brand/30 bg-linear-to-br from-brand/10 to-sun/10">
-              <h2 className="section-title">Tudo certo?</h2>
-              <p className="mt-1 mb-5 text-muted">
-                Confira a prévia. Ao publicar, o convite ganha um link para compartilhar.
+            <>
+              {expired && (
+                <div className="panel">
+                  <h2 className="section-title">Presenças</h2>
+                  {rsvps.length === 0 ? (
+                    <p className="mt-1 text-muted">Ninguém confirmou presença neste convite.</p>
+                  ) : (
+                    <>
+                      <p className="mt-1 text-sm font-semibold text-muted">
+                        {guests} {guests === 1 ? "pessoa confirmada" : "pessoas confirmadas"}
+                      </p>
+                      <ul className="mt-3 divide-y divide-line">
+                        {rsvps.map((rsvp) => (
+                          <li key={rsvp.id} className="flex items-center gap-3 py-3">
+                            <span className="min-w-0 flex-1 font-medium break-words">{rsvp.guest_name}</span>
+                            <span className="badge shrink-0 bg-sunken text-muted">
+                              {rsvp.party_size} {rsvp.party_size === 1 ? "pessoa" : "pessoas"}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+                </div>
+              )}
+              <PixPanel
+                invitationId={invitation.id}
+                price={price}
+                lastDay={nextLastDay}
+                reactivate={expired}
+                admin={isAdmin === true}
+              />
+            </>
+          )}
+
+          {!expired && (
+            <div className="panel">
+              <h2 className="section-title">Dados do convite</h2>
+              <p className="mt-1 mb-6 text-muted">
+                {published
+                  ? "Ao salvar, o convite publicado é atualizado na hora."
+                  : "Estes textos aparecem no convite exatamente como estão aqui."}
               </p>
-              <ActionButton
-                action={publishInvitation.bind(null, invitation.id)}
-                label="Publicar convite"
-                pendingLabel="Publicando..."
-                icon={<Icon name="sparkles" className="size-[18px]" />}
+              <DetailsForm
+                save={saveDetails.bind(null, invitation.id)}
+                invitation={invitation}
+                submitLabel="Salvar dados"
               />
             </div>
           )}
 
-          <div className="panel">
-            <h2 className="section-title">Dados do convite</h2>
-            <p className="mt-1 mb-6 text-muted">
-              {published
-                ? "Ao salvar, o convite publicado é atualizado na hora."
-                : "Estes textos aparecem no convite exatamente como estão aqui."}
-            </p>
-            <DetailsForm
-              save={saveDetails.bind(null, invitation.id)}
-              invitation={invitation}
-              submitLabel="Salvar dados"
-            />
-          </div>
-
           <div className="flex justify-end">
-            <DeleteInvitationButton
-              action={deleteInvitation.bind(null, invitation.id)}
-              name={invitation.child_name}
-            />
+            <DeleteInvitationButton action={deleteInvitation.bind(null, invitation.id)} name={invitation.child_name} />
           </div>
         </div>
       </section>

@@ -5,7 +5,7 @@ export const LEGAL = {
   forum: "Manaus/AM",
   rsvpRetentionMonths: 6,
   // Data em que a versão atual dos textos passou a valer (AAAA-MM-DD).
-  effectiveDate: "2026-11-21",
+  effectiveDate: "2026-11-24",
 } as const;
 
 export function formatEffectiveDate(date: string = LEGAL.effectiveDate) {

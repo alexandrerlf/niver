@@ -7,18 +7,23 @@ import { formatDayMonth } from "@/lib/countdown";
 import { ART_BUCKET, type Invitation } from "@/lib/invitation";
 import { createClient, getUserId } from "@/lib/supabase/server";
 
-type Row = Pick<Invitation, "id" | "child_name" | "event_date" | "status" | "image_path">;
+type Row = Pick<Invitation, "id" | "child_name" | "event_date" | "status" | "image_path" | "expires_at">;
+
+// No ar só dentro da validade; vencido ou arquivado aparece como encerrado.
+function live(invitation: Row) {
+  return invitation.status === "published" && (!invitation.expires_at || Date.parse(invitation.expires_at) > Date.now());
+}
 
 export default async function DashboardPage() {
   const supabase = await createClient();
   const userId = await getUserId(supabase);
   const { data } = await supabase
     .from("invitations")
-    .select("id, child_name, event_date, status, image_path")
+    .select("id, child_name, event_date, status, image_path, expires_at")
     .eq("owner_id", userId)
     .order("created_at", { ascending: false });
   const invitations = (data ?? []) as Row[];
-  const published = invitations.filter((invitation) => invitation.status === "published").length;
+  const published = invitations.filter(live).length;
 
   return (
     <main>
@@ -68,9 +73,11 @@ export default async function DashboardPage() {
                 title={invitation.child_name || "Sem nome"}
                 subtitle={formatDayMonth(invitation.event_date) || "Sem data"}
                 badge={
-                  invitation.status === "published"
+                  live(invitation)
                     ? { label: "No ar", tone: "leaf" }
-                    : { label: "Rascunho", tone: "sun" }
+                    : invitation.status === "draft"
+                      ? { label: "Rascunho", tone: "sun" }
+                      : { label: "Encerrado", tone: "muted" }
                 }
               >
                 <DeleteInvitationButton
