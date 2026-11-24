@@ -94,8 +94,8 @@ export async function requestPixCharge(invitationId: string): Promise<PixResult>
         amountCents: PRICE_CENTS,
         email,
         description: `Convite Niver: ${invitation.child_name}`.slice(0, 120),
-        // Fora da produção, o pagador de teste "APRO" tem o Pix aprovado sozinho.
-        testPayer: process.env.VERCEL_ENV !== "production",
+        // Com credenciais de teste, o pagador "APRO" tem o Pix aprovado sozinho.
+        testPayer: process.env.MERCADOPAGO_TEST_PAYER === "1" || process.env.VERCEL_ENV !== "production",
       }),
       created.id,
     );
@@ -126,9 +126,8 @@ export async function checkPixCharge(chargeId: string): Promise<{ status: Charge
   if (!charge) return { status: "failed" };
 
   try {
-    const status = await settleCharge(createServiceClient(), charge);
-    if (status === "paid") revalidatePath(`/convites/${charge.invitation_id}`);
-    return { status };
+    // Sem revalidatePath: a tela mostra a confirmação e só depois recarrega o convite no ar.
+    return { status: await settleCharge(createServiceClient(), charge) };
   } catch (error) {
     console.error("checkPixCharge", error);
     return { status: charge.status };

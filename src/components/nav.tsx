@@ -7,7 +7,6 @@ import { Icon, type IconName } from "@/components/icons";
 const LINKS: { href: string; label: string; icon: IconName; match: string[] }[] = [
   { href: "/convites", label: "Convites", icon: "mail", match: ["/convites", "/novo"] },
   { href: "/admin/modelos", label: "Modelos", icon: "grid", match: ["/admin/modelos"] },
-  { href: "/admin/clientes", label: "Clientes", icon: "users", match: ["/admin/clientes"] },
 ];
 
 function useActive() {

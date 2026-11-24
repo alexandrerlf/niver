@@ -19,3 +19,8 @@ export function lastActiveDay(eventDate: string | null, paidAt: Date) {
   const base = eventDate && eventDate > paidDay ? eventDate : paidDay;
   return new Date(Date.parse(`${base}T00:00:00Z`) + 7 * DAY_MS).toISOString().slice(0, 10);
 }
+
+// Último dia no ar a partir do `expires_at` do banco, que é a meia-noite de Brasília do dia seguinte.
+export function lastDayOf(expiresAt: string) {
+  return brasiliaDay(new Date(Date.parse(expiresAt) - 1));
+}

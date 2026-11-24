@@ -12,7 +12,6 @@ type Row = Pick<Template, "id" | "name" | "art_path">;
 
 export default async function NewInvitationPage() {
   const supabase = await createClient();
-  const { data: allowed } = await supabase.rpc("can_create_invitations");
   const { data } = await supabase
     .from("templates")
     .select("id, name, art_path")
@@ -29,13 +28,8 @@ export default async function NewInvitationPage() {
       </div>
 
       {templates.length === 0 ? (
-        <EmptyState
-          icon={<Icon name={allowed === true ? "image" : "mail"} className="size-8" />}
-          title={allowed === true ? "Nenhum modelo liberado ainda" : "Sua conta ainda não está autorizada"}
-        >
-          {allowed === true
-            ? "Peça o tema que você quer. Ele aparece aqui assim que for liberado."
-            : "Peça a liberação do seu e-mail para criar convites."}
+        <EmptyState icon={<Icon name="image" className="size-8" />} title="Nenhum modelo disponível agora">
+          Novos temas aparecem aqui assim que forem lançados.
         </EmptyState>
       ) : (
         <ul className="stagger grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4">

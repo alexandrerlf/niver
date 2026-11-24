@@ -2,7 +2,7 @@ import { createHmac } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import type { PublicInvitation } from "@/lib/invitation";
 import { buildPixOrder, isOrderPaid, readPixCharge, verifyWebhookSignature } from "@/lib/mercado-pago";
-import { PRICE_CENTS, formatPrice, lastActiveDay } from "@/lib/pricing";
+import { PRICE_CENTS, formatPrice, lastActiveDay, lastDayOf } from "@/lib/pricing";
 import { renderInvitation } from "@/lib/render";
 
 describe("preço", () => {
@@ -26,6 +26,13 @@ describe("último dia no ar", () => {
   it("usa o dia do pagamento no horário de Brasília", () => {
     // 01:00 UTC do dia 2 ainda é dia 1 em Brasília.
     expect(lastActiveDay(null, new Date("2026-12-02T01:00:00Z"))).toBe("2026-12-08");
+  });
+});
+
+describe("último dia gravado no banco", () => {
+  it("é o dia anterior ao fim da validade, em Brasília", () => {
+    // O banco grava a meia-noite de Brasília do dia seguinte ao último dia.
+    expect(lastDayOf("2026-12-28T03:00:00+00:00")).toBe("2026-12-27");
   });
 });
 

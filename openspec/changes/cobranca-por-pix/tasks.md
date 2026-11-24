@@ -17,19 +17,19 @@
 
 ## 3. Cobrança e publicação no servidor
 
-- [ ] 3.1 Cliente Supabase de serviço só no servidor, lendo `SUPABASE_SECRET_KEY`, e chamadas à API de Orders lendo `MERCADOPAGO_ACCESS_TOKEN`; `.env.example` atualizado (verificar: `npm run build` passa e nenhum desses nomes aparece no código do navegador)
+- [x] 3.1 Cliente Supabase de serviço só no servidor, lendo `SUPABASE_SECRET_KEY`, e chamadas à API de Orders lendo `MERCADOPAGO_ACCESS_TOKEN`; `.env.example` atualizado (verificar: `npm run build` passa e nenhum desses nomes aparece no código do navegador)
 - [x] 3.2 Server action "Gerar Pix": confere dono e dados completos, reaproveita cobrança em aberto, cria a order com `X-Idempotency-Key` e grava a cobrança (verificar no backend de teste: segundo pedido devolve a mesma cobrança)
 - [x] 3.3 Rota `POST /api/pagamentos/webhook`: valida assinatura, busca a order no Mercado Pago, publica uma vez só (verificar: aviso sem assinatura é recusado; aviso repetido não muda a validade)
 - [x] 3.4 Conferência ativa: a tela de pagamento consulta a cobrança e, se pendente, o servidor pergunta ao Mercado Pago (verificar: publicação acontece mesmo sem o webhook)
 - [x] 3.5 Cortesia: action do admin que confere `is_admin` e publica pela função com origem `cortesia` (verificar: cliente comum recebe recusa)
-- [ ] 3.6 `/c/[slug]` mostra "Este convite foi encerrado" para convite arquivado ou vencido, e `/api/rsvp` recusa (verificar abrindo um convite vencido no backend de teste)
+- [x] 3.6 `/c/[slug]` mostra "Este convite foi encerrado" para convite arquivado ou vencido, e `/api/rsvp` recusa (verificar abrindo um convite vencido no backend de teste)
 
 ## 4. Telas
 
-- [ ] 4.1 Gestão do convite: no rascunho, "Publicar por R$ 5,00" com a validade calculada; painel do Pix com QR code, copiar código, espera e sucesso; publicado mostra "Ativo até dd/mm. Compartilhe o link quantas vezes quiser." (verificar em 390 px e 1280 px, temas claro e escuro)
-- [ ] 4.2 Convite arquivado: prévia com "ENCERRADO", presenças só leitura, sem editar e compartilhar, botão "Reativar por R$ 5,00" (verificar visualmente)
-- [ ] 4.3 Admin: botão "Publicar sem cobrar" na gestão do convite; "Clientes" sai do menu; `/novo` sem aviso de conta não autorizada (verificar com conta admin e conta comum)
-- [ ] 4.4 Lista de convites com selo "Arquivado" e vitrine e FAQ sem a frase de contas convidadas, com o preço (verificar visualmente)
+- [x] 4.1 Gestão do convite: no rascunho, "Publicar por R$ 5,00" com a validade calculada; painel do Pix com QR code, copiar código, espera e sucesso; publicado mostra "Ativo até dd/mm. Compartilhe o link quantas vezes quiser." (verificar em 390 px e 1280 px, temas claro e escuro)
+- [x] 4.2 Convite arquivado: prévia com "ENCERRADO", presenças só leitura, sem editar e compartilhar, botão "Reativar por R$ 5,00" (verificar visualmente)
+- [x] 4.3 Admin: botão "Publicar sem cobrar" na gestão do convite; "Clientes" sai do menu; `/novo` sem aviso de conta não autorizada (verificar com conta admin e conta comum)
+- [x] 4.4 Lista de convites com selo "Arquivado" e vitrine e FAQ sem a frase de contas convidadas, com o preço (verificar visualmente)
 
 ## 5. Documentação e fechamento
 
