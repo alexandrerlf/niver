@@ -19,8 +19,9 @@ Hoje o cliente publica o convite mudando `status` direto (a permissão de `updat
 ## Decisions
 
 - **Preço de R$ 5,00 por publicação.** Fica numa constante do servidor (`src/lib/pricing.ts`, em centavos) e é gravado na cobrança no momento em que ela é gerada. Mudar o preço não altera cobranças em aberto. Reativar custa o mesmo.
-- **Pix pelo Mercado Pago, API de pagamentos.** Cria a cobrança com `payment_method_id = pix` e recebe o QR code e o copia e cola na resposta. Alternativa: link de checkout do Mercado Pago; descartada porque tira o cliente do app e esconde o QR code.
-- **Webhook com confirmação ativa.** A rota de webhook não confia no corpo do aviso: busca o pagamento na API do Mercado Pago com o token do app e só publica se o status for `approved` e o valor e a referência baterem com a cobrança gravada. Também valida a assinatura `x-signature`. A referência externa do pagamento é o id da cobrança no banco.
+- **Pix pelo Mercado Pago, API de Orders.** O servidor cria a cobrança com `POST /v1/orders` (`type: online`, `processing_mode: automatic`, um pagamento com `payment_method.id = pix`, `external_reference` = id da cobrança no banco, cabeçalho `X-Idempotency-Key`) e recebe na resposta o QR code e o copia e cola, que a tela mostra. Alternativas: a API de Payments, que o painel do Mercado Pago marca como descontinuada em breve; e o Checkout Pro, descartado porque tira o cliente do app e esconde o QR code.
+- **Aviso com confirmação ativa.** A rota de webhook valida a assinatura `x-signature` com a assinatura secreta do painel e não confia no corpo do aviso: busca a order com `GET /v1/orders/{id}` usando o token do app e só publica se ela estiver paga, com o valor e a `external_reference` iguais aos da cobrança gravada.
+- **Teste sem dinheiro de verdade.** Com as credenciais de teste, uma order com pagador de nome "APRO" é aprovada automaticamente em poucos segundos; não é preciso conta compradora de teste. O comportamento será confirmado na primeira cobrança de teste.
 - **Publicação por função do banco.** Publicar, reativar e expirar são feitos por funções `security definer` chamadas só pelo servidor com a chave de serviço. O cliente perde o `grant update (status)`. Alternativa: checar na server action; descartada porque a regra do projeto é permissão no banco.
 - **Validade.** `expires_at` = fim do dia, no horário de Brasília, de `max(data da festa, data do pagamento) + 7 dias`. Quando o dono muda a data da festa de um convite pago, um gatilho recalcula com a mesma fórmula, limitada a `paid_at + 90 dias`. Isso cobre festa adiada sem permitir reusar o convite indefinidamente. Alternativa: 30 dias do pagamento; descartada porque derruba o convite antes da festa de quem paga com antecedência.
 - **Cortesia do admin.** O admin publica pela mesma função, com a cobrança registrada com valor zero e origem `cortesia`, para o histórico mostrar quem publicou sem pagar. A validade segue a mesma regra.
@@ -44,11 +45,13 @@ Hoje o cliente publica o convite mudando `status` direto (a permissão de `updat
 
 1. Migração: tabela de cobranças, colunas `paid_at` e `expires_at`, estado `archived` em `status`, funções de publicar, reativar e expirar, gatilho de recálculo da validade, revogação do `update (status)` do cliente, política de confirmação que exige convite ativo e política de inserção sem `allowed_emails`.
 2. Preencher `expires_at` dos convites já publicados com a regra de transição.
-3. Deploy com as credenciais de teste do Mercado Pago e cobrança de ponta a ponta com usuário de teste.
+3. Deploy com as credenciais de teste do Mercado Pago e cobrança de ponta a ponta com pagador "APRO".
 4. Trocar para as credenciais de produção.
 
 Rollback: devolver o `grant update (status)` e a exigência de `allowed_emails`, e remover a checagem de validade em `/c/[slug]`.
 
 ## Open Questions
 
-1. **Conta do Mercado Pago** com Pix habilitado: o dono precisa criar a aplicação e gerar as credenciais de teste antes da etapa 3 do plano de migração.
+Nenhuma decisão de produto em aberto. Pendências operacionais do dono: cadastrar o webhook no painel do Mercado Pago quando a rota existir (e salvar `MERCADOPAGO_WEBHOOK_SECRET` na Vercel), cadastrar uma chave Pix na conta real e ativar as credenciais de produção antes do lançamento.
+
+Variáveis de ambiente na Vercel: `MERCADOPAGO_ACCESS_TOKEN` (teste, já salva), `SUPABASE_SECRET_KEY` (já salva) e `MERCADOPAGO_WEBHOOK_SECRET` (depois).

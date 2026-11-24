@@ -28,5 +28,5 @@ O Niver precisa de receita, e o valor está no convite publicado: o link que fun
 
 - **Banco:** nova tabela de cobranças; colunas `paid_at` e `expires_at` e o estado `archived` em `invitations`; o cliente perde a permissão de alterar `status`; a política de criação de convites deixa de consultar `allowed_emails`; validade recalculada quando a data da festa muda.
 - **Código:** server action para gerar a cobrança, rota de webhook do Mercado Pago, publicação de cortesia no admin, `/c/[slug]` e `/api/rsvp` checam validade, marca "PRÉVIA" no `render.ts`, telas de pagamento, de reativação e de histórico; `/novo` deixa de checar autorização; tela "Clientes" removida do menu.
-- **Serviço externo:** Mercado Pago (API de pagamentos e webhooks), com credenciais em variáveis de ambiente da Vercel.
+- **Serviço externo:** Mercado Pago (API de Orders e webhooks), com credenciais em variáveis de ambiente da Vercel.
 - **Lançamento:** o cadastro aberto e a cobrança entram juntos, no mesmo deploy, para ninguém publicar de graça no intervalo.
