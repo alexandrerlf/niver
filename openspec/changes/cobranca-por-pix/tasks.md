@@ -18,10 +18,10 @@
 ## 3. Cobrança e publicação no servidor
 
 - [ ] 3.1 Cliente Supabase de serviço só no servidor, lendo `SUPABASE_SECRET_KEY`, e chamadas à API de Orders lendo `MERCADOPAGO_ACCESS_TOKEN`; `.env.example` atualizado (verificar: `npm run build` passa e nenhum desses nomes aparece no código do navegador)
-- [ ] 3.2 Server action "Gerar Pix": confere dono e dados completos, reaproveita cobrança em aberto, cria a order com `X-Idempotency-Key` e grava a cobrança (verificar no backend de teste: segundo pedido devolve a mesma cobrança)
-- [ ] 3.3 Rota `POST /api/pagamentos/webhook`: valida assinatura, busca a order no Mercado Pago, publica uma vez só (verificar: aviso sem assinatura é recusado; aviso repetido não muda a validade)
-- [ ] 3.4 Conferência ativa: a tela de pagamento consulta a cobrança e, se pendente, o servidor pergunta ao Mercado Pago (verificar: publicação acontece mesmo sem o webhook)
-- [ ] 3.5 Cortesia: action do admin que confere `is_admin` e publica pela função com origem `cortesia` (verificar: cliente comum recebe recusa)
+- [x] 3.2 Server action "Gerar Pix": confere dono e dados completos, reaproveita cobrança em aberto, cria a order com `X-Idempotency-Key` e grava a cobrança (verificar no backend de teste: segundo pedido devolve a mesma cobrança)
+- [x] 3.3 Rota `POST /api/pagamentos/webhook`: valida assinatura, busca a order no Mercado Pago, publica uma vez só (verificar: aviso sem assinatura é recusado; aviso repetido não muda a validade)
+- [x] 3.4 Conferência ativa: a tela de pagamento consulta a cobrança e, se pendente, o servidor pergunta ao Mercado Pago (verificar: publicação acontece mesmo sem o webhook)
+- [x] 3.5 Cortesia: action do admin que confere `is_admin` e publica pela função com origem `cortesia` (verificar: cliente comum recebe recusa)
 - [ ] 3.6 `/c/[slug]` mostra "Este convite foi encerrado" para convite arquivado ou vencido, e `/api/rsvp` recusa (verificar abrindo um convite vencido no backend de teste)
 
 ## 4. Telas
