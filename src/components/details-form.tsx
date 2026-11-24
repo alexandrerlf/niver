@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, type ReactNode } from "react";
+import { useActionState, useEffect, useRef, type ReactNode } from "react";
 import type { FormState } from "@/app/actions";
 import { FormFeedback } from "@/components/form-feedback";
 import { Icon, Spinner, type IconName } from "@/components/icons";
@@ -53,9 +53,20 @@ export function DetailsForm({
   askGuardianConsent?: boolean;
 }) {
   const [state, action, pending] = useActionState(save, initial);
+  const formRef = useRef<HTMLFormElement>(null);
+  // Com erro, o formulário volta com o que foi digitado, e só o campo com problema fica vazio.
+  const value = (name: string, saved: string) => (state.values ? (state.values[name] ?? "") : saved);
+  const invalid = (name: string) => (state.field === name ? true : undefined);
+
+  // Leva o foco ao campo com problema.
+  useEffect(() => {
+    if (!state.field) return;
+    const field = formRef.current?.elements.namedItem(state.field);
+    if (field instanceof HTMLElement) field.focus();
+  }, [state]);
 
   return (
-    <form action={action} className="space-y-8">
+    <form ref={formRef} action={action} className="space-y-8">
       <Group icon="cake" title="Aniversariante">
         <div>
           <label className="label" htmlFor="child_name">
@@ -65,7 +76,8 @@ export function DetailsForm({
             className="field"
             id="child_name"
             name="child_name"
-            defaultValue={invitation.child_name}
+            defaultValue={value("child_name", invitation.child_name)}
+            aria-invalid={invalid("child_name")}
             maxLength={120}
             placeholder="Ex.: Lia"
             required
@@ -84,7 +96,8 @@ export function DetailsForm({
             min={0}
             max={120}
             placeholder="Ex.: 6"
-            defaultValue={invitation.age ?? ""}
+            defaultValue={value("age", invitation.age === null ? "" : String(invitation.age))}
+            aria-invalid={invalid("age")}
           />
         </div>
       </Group>
@@ -99,7 +112,8 @@ export function DetailsForm({
             id="event_date"
             name="event_date"
             type="date"
-            defaultValue={invitation.event_date ?? ""}
+            defaultValue={value("event_date", invitation.event_date ?? "")}
+            aria-invalid={invalid("event_date")}
             required
           />
         </div>
@@ -112,7 +126,8 @@ export function DetailsForm({
             id="event_time"
             name="event_time"
             type="time"
-            defaultValue={invitation.event_time ?? ""}
+            defaultValue={value("event_time", invitation.event_time ?? "")}
+            aria-invalid={invalid("event_time")}
             required
           />
         </div>
@@ -124,7 +139,8 @@ export function DetailsForm({
             className="field"
             id="location_name"
             name="location_name"
-            defaultValue={invitation.location_name}
+            defaultValue={value("location_name", invitation.location_name)}
+            aria-invalid={invalid("location_name")}
             maxLength={200}
             placeholder="Ex.: Buffet Alegria"
             required
@@ -141,7 +157,8 @@ export function DetailsForm({
             type="url"
             inputMode="url"
             placeholder="https://maps.app.goo.gl/..."
-            defaultValue={invitation.maps_url ?? ""}
+            defaultValue={value("maps_url", invitation.maps_url ?? "")}
+            aria-invalid={invalid("maps_url")}
           />
         </div>
         <div>
@@ -154,7 +171,8 @@ export function DetailsForm({
             name="rsvp_deadline"
             type="date"
             aria-describedby="rsvp-deadline-hint"
-            defaultValue={invitation.rsvp_deadline ?? ""}
+            defaultValue={value("rsvp_deadline", invitation.rsvp_deadline ?? "")}
+            aria-invalid={invalid("rsvp_deadline")}
           />
           <p id="rsvp-deadline-hint" className="hint">
             Depois desse dia, o convite não aceita novas confirmações.
@@ -173,7 +191,8 @@ export function DetailsForm({
             name="message"
             maxLength={500}
             placeholder="Um recado para os convidados"
-            defaultValue={invitation.message}
+            defaultValue={value("message", invitation.message)}
+            aria-invalid={invalid("message")}
           />
         </div>
         <div className="sm:col-span-2">
@@ -186,7 +205,8 @@ export function DetailsForm({
             name="gifts"
             aria-describedby="gifts-hint"
             placeholder={"Livros\nBlocos de montar"}
-            defaultValue={invitation.gifts.join("\n")}
+            defaultValue={value("gifts", invitation.gifts.join("\n"))}
+            aria-invalid={invalid("gifts")}
           />
           <p id="gifts-hint" className="hint">
             Uma sugestão por linha.
@@ -200,6 +220,8 @@ export function DetailsForm({
             type="checkbox"
             name="guardian_consent"
             required
+            defaultChecked={state.values?.guardian_consent === "on"}
+            aria-invalid={invalid("guardian_consent")}
             className="mt-0.5 size-5 shrink-0 cursor-pointer accent-brand"
           />
           <span>
