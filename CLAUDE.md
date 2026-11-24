@@ -23,6 +23,7 @@ Next.js 16 (App Router, React 19), Tailwind 4, Supabase (Auth, Postgres com RLS,
 - `src/lib/render.ts`: monta o convite a partir do HTML do modelo, valida modelos (`templateProblems`) e define o CSP.
 - `src/proxy.ts`: renova a sessão e protege as rotas (no Next 16, `proxy.ts` substitui o `middleware.ts`).
 - `supabase/migrations/`: esquema e RLS. `templates/`: fontes dos modelos (arte e HTML).
+- `docs/documentacao/lancamento.md`: tudo o que muda entre teste e produção (credenciais, variáveis, domínio, revisões). Quem criar algo que vale só para teste ou precisa de outro valor em produção acrescenta o item lá no mesmo PR.
 - `docs/documentacao/`: requisitos e regras de negócio. Leia antes de mudar o fluxo. `plano-de-produto.md` tem o que está planejado e as decisões em aberto. As especificações formais ficam em `openspec/`.
 
 ## Regras que não podem quebrar
