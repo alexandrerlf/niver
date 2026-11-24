@@ -39,6 +39,10 @@ export default function PrivacyPage() {
             data da resposta. O convidado não cria conta.
           </li>
           <li>
+            <strong>Do pagamento:</strong> valor, data e situação de cada cobrança Pix e o código da transação no
+            Mercado Pago. Os dados bancários de quem paga ficam com o banco e o Mercado Pago; o Niver não os recebe.
+          </li>
+          <li>
             <strong>Técnicos:</strong> cookies de sessão para manter você conectado e registros de acesso (como
             endereço IP e horário) guardados pelos nossos fornecedores para segurança. No seu aparelho guardamos se
             você já viu o tutorial e o aviso de instalação.
@@ -93,6 +97,9 @@ export default function PrivacyPage() {
           <li>
             <strong>Google:</strong> só se você escolher entrar com a conta Google.
           </li>
+          <li>
+            <strong>Mercado Pago:</strong> processa o pagamento por Pix. Recebe o seu e-mail e o valor da cobrança.
+          </li>
         </ul>
         <p>
           Essas empresas têm sede no exterior e podem acessar os dados de fora do Brasil para suporte e segurança,
@@ -107,6 +114,9 @@ export default function PrivacyPage() {
           <li>
             Presenças: apagadas automaticamente {LEGAL.rsvpRetentionMonths} meses depois da data da festa. O
             convite continua no seu histórico.
+          </li>
+          <li>
+            Cobranças: junto com o convite. O Mercado Pago guarda os dados da transação pelo prazo que a lei exige.
           </li>
           <li>Registros de acesso: pelo prazo dos fornecedores e da lei.</li>
         </ul>

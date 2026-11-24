@@ -12,7 +12,7 @@ O Niver é um catálogo **curado** de convites interativos. Não vira editor liv
 |---|---|
 | 1. Prazo para confirmar presença | Feito |
 | 2. Foto da criança no convite | Backlog |
-| 3. Pagamento por Pix (Mercado Pago) | Decidido, aguardando a conta do Mercado Pago |
+| 3. Pagamento por Pix (Mercado Pago) | Implementado, falta o teste de ponta a ponta e as credenciais de produção |
 
 ## 1. Prazo para confirmar presença
 
@@ -49,7 +49,10 @@ A especificação formal está em `openspec/changes/cobranca-por-pix/` (proposta
 
 ### Pendente
 
-- **Conta do Mercado Pago** com Pix habilitado e credenciais de teste, criada pelo dono.
+- **Webhook** cadastrado no painel do Mercado Pago (evento de orders) e `MERCADOPAGO_WEBHOOK_SECRET` na Vercel.
+- **Teste de ponta a ponta** com as credenciais de teste e `MERCADOPAGO_TEST_PAYER=1`.
+- **Antes de cobrar de verdade:** chave Pix na conta real, credenciais de produção, apagar `MERCADOPAGO_TEST_PAYER` e revisão jurídica da política e dos termos (inclusive o reembolso em até 7 dias).
+- **Limpeza depois do lançamento:** tabela `allowed_emails`, tela e ações de "Clientes".
 
 ## Fora do plano por enquanto
 

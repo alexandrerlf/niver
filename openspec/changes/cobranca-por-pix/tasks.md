@@ -33,9 +33,9 @@
 
 ## 5. Documentação e fechamento
 
-- [ ] 5.1 Atualizar `docs/documentacao/plano-de-produto.md`, a política de privacidade (Mercado Pago como operador do pagamento) e os Termos (preço e validade) (verificar leitura)
-- [ ] 5.2 Revisar as telas novas com `web-design-guidelines` e corrigir o que for apontado
-- [ ] 5.3 `npm run check`, `npm run specs` e `npm run build` passam
+- [x] 5.1 Atualizar `docs/documentacao/plano-de-produto.md`, a política de privacidade (Mercado Pago como operador do pagamento) e os Termos (preço e validade) (verificar leitura)
+- [x] 5.2 Revisar as telas novas com `web-design-guidelines` e corrigir o que for apontado
+- [x] 5.3 `npm run check`, `npm run specs` e `npm run build` passam
 - [ ] 5.4 Cobrança de ponta a ponta numa prévia da Vercel com credenciais de teste e pagador "APRO": gerar Pix, aprovação automática, convite publicado com a validade certa (verificar no app e na tabela `charges`)
 
 ## Workflow follow-up

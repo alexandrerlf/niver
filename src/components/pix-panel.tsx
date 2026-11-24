@@ -31,14 +31,19 @@ export function PixPanel({
   const status = charge?.status ?? null;
 
   // Pergunta pela cobrança até o pagamento cair, vencer ou falhar.
+  // Depois de pago, mostra a confirmação e só então recarrega o convite no ar.
+  useEffect(() => {
+    if (status !== "paid") return;
+    const timer = setTimeout(() => router.refresh(), 3000);
+    return () => clearTimeout(timer);
+  }, [status, router]);
+
   useEffect(() => {
     if (!charge || charge.status !== "pending") return;
     const timer = setInterval(async () => {
       const result = await checkPixCharge(charge.id);
       if (result.status === charge.status) return;
       setCharge({ ...charge, status: result.status });
-      // Deixa a confirmação à vista antes de a página trocar para o convite no ar.
-      if (result.status === "paid") setTimeout(() => router.refresh(), 3000);
     }, POLL_MS);
     return () => clearInterval(timer);
   }, [charge, router]);
@@ -66,9 +71,13 @@ export function PixPanel({
 
   async function copy() {
     if (!charge) return;
-    await navigator.clipboard.writeText(charge.pixCode);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(charge.pixCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setError("Não foi possível copiar. Toque e segure no código acima para copiar.");
+    }
   }
 
   const action = reactivate ? "Reativar" : "Publicar";
@@ -108,7 +117,7 @@ export function PixPanel({
             <p className="text-sm text-muted">
               No app do seu banco, escolha Pix e leia o QR code, ou copie o código e use o Pix copia e cola.
             </p>
-            <p className="mt-3 truncate rounded-2xl border border-line bg-card px-4 py-3 font-mono text-sm" title={charge.pixCode}>
+            <p className="mt-3 truncate rounded-2xl border border-line bg-card px-4 py-3 font-mono text-sm select-all" title={charge.pixCode}>
               {charge.pixCode}
             </p>
             <button type="button" className="button-secondary mt-3 w-full sm:w-auto" onClick={copy}>
