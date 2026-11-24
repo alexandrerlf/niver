@@ -63,7 +63,14 @@ export async function requestPixCharge(invitationId: string): Promise<PixResult>
   if (!canPublish(invitation)) return { error: "Este convite já está no ar." };
   if (!email) return { error: "Sua conta precisa de um e-mail para gerar o Pix." };
 
-  const service = createServiceClient();
+  let service;
+  try {
+    service = createServiceClient();
+  } catch (error) {
+    // Falta de configuração no servidor: avisa a pessoa em vez de quebrar a página.
+    console.error("requestPixCharge", error);
+    return { error: "Não foi possível gerar o Pix agora. Tente de novo em instantes." };
+  }
   const { data: open } = await service
     .from("charges")
     .select("*")
@@ -140,7 +147,13 @@ export async function publishCourtesy(invitationId: string): Promise<{ error?: s
   const { data: isAdmin } = await supabase.rpc("is_admin");
   if (isAdmin !== true) return { error: "Só o admin publica sem cobrar." };
 
-  const service = createServiceClient();
+  let service;
+  try {
+    service = createServiceClient();
+  } catch (error) {
+    console.error("publishCourtesy", error);
+    return { error: "Não foi possível publicar agora. Tente de novo em instantes." };
+  }
   const { data } = await service.from("invitations").select("*").eq("id", invitationId).maybeSingle();
   const invitation = data as Invitation | null;
   if (!invitation) return { error: "Convite não encontrado." };
