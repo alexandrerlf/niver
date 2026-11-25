@@ -119,10 +119,10 @@ export function makeSlug(name: string, age: number | null, random: string) {
 export const GUARDIAN_CONSENT_ERROR = "Confirme que você é responsável pela criança para continuar.";
 
 // Na criação, além dos dados da festa, o responsável confirma que pode usar o nome e a idade da criança.
-const guardianConsentSchema = z.literal("on", { error: GUARDIAN_CONSENT_ERROR });
+const guardianConsentSchema = z.object({ guardian_consent: z.literal("on", { error: GUARDIAN_CONSENT_ERROR }) });
 
 export function parseNewDetails(form: FormData) {
-  const consent = guardianConsentSchema.safeParse(form.get("guardian_consent"));
+  const consent = guardianConsentSchema.safeParse({ guardian_consent: form.get("guardian_consent") });
   if (!consent.success) return { success: false as const, error: consent.error, data: undefined };
   return parseDetails(form);
 }

@@ -11,11 +11,13 @@ import {
   parseNewDetails,
   type Invitation,
 } from "@/lib/invitation";
+import { formError } from "@/lib/form-values";
 import { slugCode } from "@/lib/slug-code";
 import { createClient, getUserId } from "@/lib/supabase/server";
 import { type Template } from "@/lib/template";
 
-export type FormState = { error?: string; notice?: string };
+// `values` devolve o que foi digitado quando há erro, para o formulário não voltar em branco; `field` é o campo com problema.
+export type FormState = { error?: string; notice?: string; field?: string; values?: Record<string, string> };
 
 async function callbackUrl() {
   const origin = (await headers()).get("origin");
@@ -68,7 +70,7 @@ export async function createInvitation(
   form: FormData,
 ): Promise<FormState> {
   const parsed = parseNewDetails(form);
-  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Revise os campos." };
+  if (!parsed.success) return formError(form, parsed.error);
 
   const supabase = await createClient();
   const ownerId = await getUserId(supabase);
@@ -107,7 +109,7 @@ export async function createInvitation(
 
 export async function saveDetails(id: string, _: FormState, form: FormData): Promise<FormState> {
   const parsed = parseDetails(form);
-  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Revise os campos." };
+  if (!parsed.success) return formError(form, parsed.error);
 
   const supabase = await createClient();
   const { data, error } = await supabase

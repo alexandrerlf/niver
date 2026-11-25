@@ -133,6 +133,10 @@ body {
   .field:focus {
     @apply border-brand ring-4 ring-brand/15 outline-none;
   }
+  /* Campo com problema depois de enviar o formulário. */
+  .field[aria-invalid="true"] {
+    @apply border-danger ring-4 ring-danger/15;
+  }
   .label {
     @apply mb-1.5 block text-sm font-semibold;
   }
