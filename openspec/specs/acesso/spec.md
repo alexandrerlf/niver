@@ -19,19 +19,6 @@ O sistema SHALL permitir entrar com conta Google ou com e-mail e senha confirmad
 - WHEN ela abre `/novo`
 - THEN é levada para `/login`
 
-### Requirement: Só clientes autorizados criam convites
-O sistema SHALL permitir criar convites apenas a e-mails autorizados pelo admin, diretamente ou por liberação de um modelo restrito.
-
-#### Scenario: Conta não autorizada
-- GIVEN uma pessoa logada cujo e-mail não foi autorizado
-- WHEN ela abre o catálogo
-- THEN vê que a conta ainda não está autorizada e não vê modelos
-
-#### Scenario: Tentativa direta pela API
-- GIVEN uma pessoa logada não autorizada
-- WHEN ela tenta inserir um convite direto no banco
-- THEN a inserção é recusada
-
 ### Requirement: Admin definido no banco
 O sistema SHALL tratar como admin apenas os e-mails cadastrados na lista de admins do banco, e SHALL esconder as telas de admin dos demais.
 
@@ -44,19 +31,6 @@ O sistema SHALL tratar como admin apenas os e-mails cadastrados na lista de admi
 - GIVEN um cliente logado
 - WHEN ele tenta incluir o próprio e-mail na lista de autorizados
 - THEN a operação é recusada pelo banco
-
-### Requirement: Admin gerencia clientes
-O sistema SHALL permitir ao admin adicionar e remover e-mails autorizados, e SHALL pedir confirmação antes de remover.
-
-#### Scenario: Remoção confirmada
-- GIVEN um e-mail autorizado
-- WHEN o admin toca em Remover e confirma
-- THEN o e-mail deixa de poder criar convites, e os convites já criados continuam no ar
-
-#### Scenario: Remoção cancelada
-- GIVEN a janela de confirmação aberta
-- WHEN o admin toca em Cancelar
-- THEN nada muda
 
 ### Requirement: Apresentação para visitantes
 O sistema SHALL mostrar a vitrine do Niver em `/` a quem não está logado, com ações para entrar e criar conta que levam ao login, e SHALL levar para `/convites` quem está logado. Depoimentos de exemplo MUST NOT aparecer em produção.
@@ -84,3 +58,14 @@ O sistema SHALL mostrar a vitrine do Niver em `/` a quem não está logado, com 
 #### Scenario: Visitante abre outra tela interna
 - **WHEN** uma pessoa sem sessão abre `/novo`
 - **THEN** continua sendo levada para `/login`
+
+### Requirement: Qualquer conta confirmada cria convites
+O sistema SHALL permitir a qualquer pessoa com conta confirmada criar convites, sem autorização prévia do admin. Publicar continua exigindo pagamento ou cortesia (capacidade `cobranca`).
+
+#### Scenario: Conta nova abre o catálogo
+- **WHEN** uma pessoa com conta recém-confirmada abre `/novo`
+- **THEN** vê os modelos liberados para todos, sem aviso de conta não autorizada
+
+#### Scenario: Visitante sem conta tenta criar convite pela API
+- **WHEN** alguém sem sessão tenta inserir um convite direto no banco
+- **THEN** a inserção é recusada

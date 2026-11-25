@@ -12,7 +12,7 @@ O Niver é um catálogo **curado** de convites interativos. Não vira editor liv
 |---|---|
 | 1. Prazo para confirmar presença | Feito |
 | 2. Foto da criança no convite | Backlog |
-| 3. Pagamento por Pix (Mercado Pago) | Implementado, falta o teste de ponta a ponta e as credenciais de produção |
+| 3. Pagamento por Pix (Mercado Pago) | No ar com credenciais de teste; testado de ponta a ponta. Falta o checklist de lançamento |
 
 ## 1. Prazo para confirmar presença
 
